@@ -12,7 +12,10 @@ weak.linter.style.header = false
 [[require]]
 name = "groebner"
 git = "https://github.com/WuProver/groebner_proj.git"
-rev = "casei-statements"
+rev = "main"
 
 [[lean_lib]]
 name = "CaseI"
+
+[[lean_lib]]
+name = "ToGroebner"

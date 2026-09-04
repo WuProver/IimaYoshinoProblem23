@@ -1,4 +1,4 @@
-import Groebner
+import ToGroebner.StandardRepresentation
 import Mathlib.LinearAlgebra.Determinant
 
 /-!
