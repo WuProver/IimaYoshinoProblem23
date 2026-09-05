@@ -1174,10 +1174,10 @@ lemma finite_weightedDegree_fiber (n : ℕ) :
 /-- A type synonym carrying the monomial order used in Case I. -/
 def caseIMonomialSyn := ℕ+ →₀ ℕ
 
-/-- The identity equivalence into `CaseIMonomialSyn`. -/
+/-- The identity equivalence into `caseIMonomialSyn`. -/
 @[match_pattern] def toCaseIMonomialSyn : (ℕ+ →₀ ℕ) ≃ caseIMonomialSyn := Equiv.refl _
 
-/-- The identity equivalence out of `CaseIMonomialSyn`. -/
+/-- The identity equivalence out of `caseIMonomialSyn`. -/
 @[match_pattern] def ofCaseIMonomialSyn : caseIMonomialSyn ≃ (ℕ+ →₀ ℕ) := Equiv.refl _
 
 @[simp] lemma ofCaseIMonomialSyn_toCaseIMonomialSyn (a : ℕ+ →₀ ℕ) :
@@ -1294,7 +1294,7 @@ lemma eq_of_le_of_weightedDegree_eq {a b : ℕ+ →₀ ℕ} (hab : a ≤ b)
   simpa [hzero] using hdecomp
 
 /-- The monomial order of Section 4, certified as a monomial order in Lemma 4.1. -/
-noncomputable def CaseIMonomialOrder : MonomialOrder ℕ+ where
+noncomputable def caseIMonomialOrder : MonomialOrder ℕ+ where
   syn := caseIMonomialSyn
   toSyn := { toEquiv := toCaseIMonomialSyn, map_add' := toCaseIMonomialSyn_add }
   toSyn_monotone a b hab := by
@@ -1311,7 +1311,7 @@ noncomputable def CaseIMonomialOrder : MonomialOrder ℕ+ where
 /-- The monomial order from Section 4, with ordinary lexicographic tie-breaking. -/
 lemma caseI_def :
   ∀ a b,
-    a ≺[CaseIMonomialOrder] b ↔
+    a ≺[caseIMonomialOrder] b ↔
       weightedDegree a < weightedDegree b ∨
         weightedDegree a = weightedDegree b ∧
           (secondMoment b < secondMoment a ∨
@@ -1321,7 +1321,7 @@ lemma caseI_def :
   exact caseIMonomialSyn_lt_iff
 
 lemma caseIMonomialOrder_lt_iff {a b : ℕ+ →₀ ℕ} :
-    a ≺[CaseIMonomialOrder] b ↔
+    a ≺[caseIMonomialOrder] b ↔
       weightedDegree a < weightedDegree b ∨
         weightedDegree a = weightedDegree b ∧
           (secondMoment b < secondMoment a ∨
@@ -1330,7 +1330,7 @@ lemma caseIMonomialOrder_lt_iff {a b : ℕ+ →₀ ℕ} :
   exact caseIMonomialSyn_lt_iff
 
 lemma linear_lt_even_balanced (i k : ℕ+) (hk : (k : ℕ) = 2 * (i : ℕ)) :
-    Finsupp.single k 1 ≺[CaseIMonomialOrder] Finsupp.single i 2 := by
+    Finsupp.single k 1 ≺[caseIMonomialOrder] Finsupp.single i 2 := by
   rw [caseIMonomialOrder_lt_iff]
   right
   constructor
@@ -1343,7 +1343,7 @@ lemma linear_lt_even_balanced (i k : ℕ+) (hk : (k : ℕ) = 2 * (i : ℕ)) :
 
 lemma unbalanced_lt_even_balanced (i j k : ℕ+) (hsum : (j : ℕ) + (k : ℕ) = 2 * (i : ℕ))
     (hji : (j : ℕ) < (i : ℕ)) :
-    Finsupp.single j 1 + Finsupp.single k 1 ≺[CaseIMonomialOrder]
+    Finsupp.single j 1 + Finsupp.single k 1 ≺[caseIMonomialOrder]
       Finsupp.single i 2 := by
   rw [caseIMonomialOrder_lt_iff]
   right
@@ -1358,7 +1358,7 @@ lemma unbalanced_lt_even_balanced (i j k : ℕ+) (hsum : (j : ℕ) + (k : ℕ) =
   nlinarith
 
 lemma linear_lt_odd_balanced (i k : ℕ+) (hk : (k : ℕ) = 2 * (i : ℕ) + 1) :
-    Finsupp.single k 1 ≺[CaseIMonomialOrder]
+    Finsupp.single k 1 ≺[caseIMonomialOrder]
       Finsupp.single i 1 + Finsupp.single (next i) 1 := by
   rw [caseIMonomialOrder_lt_iff]
   right
@@ -1376,7 +1376,7 @@ lemma linear_lt_odd_balanced (i k : ℕ+) (hk : (k : ℕ) = 2 * (i : ℕ) + 1) :
 
 lemma unbalanced_lt_odd_balanced (i j k : ℕ+) (hsum : (j : ℕ) + (k : ℕ) = 2 * (i : ℕ) + 1)
     (hji : (j : ℕ) < (i : ℕ)) :
-    Finsupp.single j 1 + Finsupp.single k 1 ≺[CaseIMonomialOrder]
+    Finsupp.single j 1 + Finsupp.single k 1 ≺[caseIMonomialOrder]
       Finsupp.single i 1 + Finsupp.single (next i) 1 := by
   rw [caseIMonomialOrder_lt_iff]
   right
@@ -1438,7 +1438,7 @@ lemma degree_finset_sum_lt (m : MonomialOrder ℕ+) {T : Type*} (u : Finset T)
 
 /-- The even leading-monomial formula in Lemma 4.2. -/
 lemma degree_g_even (c : ℂ) (i : ℕ+) :
-    CaseIMonomialOrder.degree (g c (2 * (i : ℕ))) = Finsupp.single i 2 := by
+    caseIMonomialOrder.degree (g c (2 * (i : ℕ))) = Finsupp.single i 2 := by
   classical
   have heven : 2 ∣ 2 * (i : ℕ) := dvd_mul_right 2 (i : ℕ)
   rw [g, if_pos heven]
@@ -1446,7 +1446,7 @@ lemma degree_g_even (c : ℂ) (i : ℕ+) :
   have hx_twice : x (2 * (i : ℕ)) = X twice := by
     simp [x, twice]
   rw [hx_twice]
-  have hsquare : CaseIMonomialOrder.degree (x (2 * (i : ℕ) / 2) ^ 2) = Finsupp.single i 2 := by
+  have hsquare : caseIMonomialOrder.degree (x (2 * (i : ℕ) / 2) ^ 2) = Finsupp.single i 2 := by
     have hx_half : x (2 * (i : ℕ) / 2) = X i := by
       have hind : 2 * (i : ℕ) / 2 = (i : ℕ) := by omega
       rw [hind]
@@ -1455,20 +1455,20 @@ lemma degree_g_even (c : ℂ) (i : ℕ+) :
       · apply congrArg X
         exact Subtype.ext rfl
       · exact (h i.prop).elim
-    rw [hx_half, CaseIMonomialOrder.degree_pow, CaseIMonomialOrder.degree_X]
+    rw [hx_half, caseIMonomialOrder.degree_pow, caseIMonomialOrder.degree_X]
     simp [two_smul, ← Finsupp.single_add]
-  have hlower : CaseIMonomialOrder.degree
+  have hlower : caseIMonomialOrder.degree
       (C (s c (2 * (i : ℕ)) - c) * X twice +
         ∑ j ∈ (Finset.range (2 * (i : ℕ))).filter
           (fun j ↦ 0 < j ∧ 2 * j < 2 * (i : ℕ)),
-            C (s c (2 * (i : ℕ) - 2 * j)) * x j * x (2 * (i : ℕ) - j)) ≺[CaseIMonomialOrder]
+            C (s c (2 * (i : ℕ) - 2 * j)) * x j * x (2 * (i : ℕ) - j)) ≺[caseIMonomialOrder]
       Finsupp.single i 2 := by
-    apply degree_add_lt CaseIMonomialOrder
+    apply degree_add_lt caseIMonomialOrder
     · have hlinear :
-          CaseIMonomialOrder.degree (C (s c (2 * (i : ℕ)) - c) * X twice : S) ≼[CaseIMonomialOrder]
-            Finsupp.single twice 1 := degree_C_mul_X_le CaseIMonomialOrder _ twice
+          caseIMonomialOrder.degree (C (s c (2 * (i : ℕ)) - c) * X twice : S) ≼[caseIMonomialOrder]
+            Finsupp.single twice 1 := degree_C_mul_X_le caseIMonomialOrder _ twice
       exact lt_of_le_of_lt hlinear <| linear_lt_even_balanced i twice rfl
-    · apply degree_finset_sum_lt CaseIMonomialOrder
+    · apply degree_finset_sum_lt caseIMonomialOrder
       · rw [caseIMonomialOrder_lt_iff]
         left
         simp [weightedDegree, i.prop]
@@ -1480,7 +1480,7 @@ lemma degree_g_even (c : ℂ) (i : ℕ+) :
         let jpos : ℕ+ := ⟨j, hjpos⟩
         let kpos : ℕ+ := ⟨2 * (i : ℕ) - j, hdiffpos⟩
         have hdegree :=
-          degree_C_mul_X_mul_X_le CaseIMonomialOrder (s c (2 * (i : ℕ) - 2 * j)) jpos kpos
+          degree_C_mul_X_mul_X_le caseIMonomialOrder (s c (2 * (i : ℕ) - 2 * j)) jpos kpos
         have hxj : x j = X jpos := by simp [x, jpos, hjpos]
         have hxk : x (2 * (i : ℕ) - j) = X kpos := by simp [x, kpos, hdiffpos]
         rw [hxj, hxk]
@@ -1488,14 +1488,14 @@ lemma degree_g_even (c : ℂ) (i : ℕ+) :
           unbalanced_lt_even_balanced i jpos kpos (by simp [jpos, kpos]; omega)
             (by simpa [jpos] using hjlt)
   calc
-    CaseIMonomialOrder.degree
+    caseIMonomialOrder.degree
         (C (s c (2 * (i : ℕ)) - c) * X twice +
           (∑ j ∈ (Finset.range (2 * (i : ℕ))).filter
               (fun j ↦ 0 < j ∧ 2 * j < 2 * (i : ℕ)),
                 C (s c (2 * (i : ℕ) - 2 * j)) * x j * x (2 * (i : ℕ) - j)) +
           x (2 * (i : ℕ) / 2) ^ 2) =
-        CaseIMonomialOrder.degree (x (2 * (i : ℕ) / 2) ^ 2) :=
-      CaseIMonomialOrder.degree_add_eq_right_of_lt (hsquare ▸ hlower)
+        caseIMonomialOrder.degree (x (2 * (i : ℕ) / 2) ^ 2) :=
+      caseIMonomialOrder.degree_add_eq_right_of_lt (hsquare ▸ hlower)
     _ = Finsupp.single i 2 := hsquare
 
 lemma coeff_g_even_top (c : ℂ) (i : ℕ+) :
@@ -1655,7 +1655,7 @@ lemma degree_odd_main_term (c : ℂ) (hc : c ^ 2 + c = 1)
 
 /-- The odd leading-monomial formula in Lemma 4.2. -/
 lemma degree_g_odd (c : ℂ) (hc : c ^ 2 + c = 1) (i : ℕ+) :
-    CaseIMonomialOrder.degree (g c (2 * (i : ℕ) + 1)) =
+    caseIMonomialOrder.degree (g c (2 * (i : ℕ) + 1)) =
       Finsupp.single i 1 + Finsupp.single (next i) 1 := by
   classical
   let n := 2 * (i : ℕ) + 1
@@ -1683,7 +1683,7 @@ lemma degree_g_odd (c : ℂ) (hc : c ^ 2 + c = 1) (i : ℕ+) :
     rw [htop, hmain_term]
     simp only [lower, main]
     abel
-  have htarget_pos : 0 ≺[CaseIMonomialOrder]
+  have htarget_pos : 0 ≺[caseIMonomialOrder]
       Finsupp.single i 1 + Finsupp.single (next i) 1 := by
     rw [caseIMonomialOrder_lt_iff]
     left
@@ -1691,43 +1691,43 @@ lemma degree_g_odd (c : ℂ) (hc : c ^ 2 + c = 1) (i : ℕ+) :
     simp only [weightedDegree_single]
     have hpos : 0 < (i : ℕ) + (next i : ℕ) := Nat.add_pos_left i.prop _
     simpa [weightedDegree] using hpos
-  have hlower : CaseIMonomialOrder.degree lower ≺[CaseIMonomialOrder]
+  have hlower : caseIMonomialOrder.degree lower ≺[caseIMonomialOrder]
       Finsupp.single i 1 + Finsupp.single (next i) 1 := by
-    apply degree_add_lt CaseIMonomialOrder
-    · have hlinear : CaseIMonomialOrder.degree (C (s c n - c) * X top : S) ≼[CaseIMonomialOrder]
-          Finsupp.single top 1 := degree_C_mul_X_le CaseIMonomialOrder _ top
+    apply degree_add_lt caseIMonomialOrder
+    · have hlinear : caseIMonomialOrder.degree (C (s c n - c) * X top : S) ≼[caseIMonomialOrder]
+          Finsupp.single top 1 := degree_C_mul_X_le caseIMonomialOrder _ top
       exact lt_of_le_of_lt hlinear <|
         linear_lt_odd_balanced i top (by simp [top, n])
-    · apply degree_finset_sum_lt CaseIMonomialOrder lowerIndices _ _ htarget_pos
+    · apply degree_finset_sum_lt caseIMonomialOrder lowerIndices _ _ htarget_pos
       intro j hj
       simp only [lowerIndices, Finset.mem_filter, Finset.mem_range] at hj
       rcases hj with ⟨hjlt, hjpos⟩
       have hdiffpos : 0 < n - j := by simp [n]; omega
       let jpos : ℕ+ := ⟨j, hjpos⟩
       let kpos : ℕ+ := ⟨n - j, hdiffpos⟩
-      have hdegree := degree_C_mul_X_mul_X_le CaseIMonomialOrder (s c (n - 2 * j)) jpos kpos
+      have hdegree := degree_C_mul_X_mul_X_le caseIMonomialOrder (s c (n - 2 * j)) jpos kpos
       have hxj : x j = X jpos := by simpa [jpos] using x_eq_X jpos
       have hxk : x (n - j) = X kpos := by simpa [kpos] using x_eq_X kpos
       rw [hxj, hxk]
       exact lt_of_le_of_lt hdegree <|
         unbalanced_lt_odd_balanced i jpos kpos (by simp [jpos, kpos, n]; omega)
           (by simpa [jpos] using hjlt)
-  rw [hdecomp, CaseIMonomialOrder.degree_add_of_lt]
-  · exact degree_odd_main_term c hc CaseIMonomialOrder i
-  · rw [degree_odd_main_term c hc CaseIMonomialOrder i]
+  rw [hdecomp, caseIMonomialOrder.degree_add_of_lt]
+  · exact degree_odd_main_term c hc caseIMonomialOrder i
+  · rw [degree_odd_main_term c hc caseIMonomialOrder i]
     exact hlower
 
 lemma g_even_ne_zero (c : ℂ) (i : ℕ+) : g c (2 * (i : ℕ)) ≠ 0 := by
   intro hzero
   have hdegree := degree_g_even c i
-  rw [hzero, CaseIMonomialOrder.degree_zero] at hdegree
+  rw [hzero, caseIMonomialOrder.degree_zero] at hdegree
   have hsingle : Finsupp.single i 2 ≠ 0 := Finsupp.single_ne_zero.mpr (by norm_num)
   exact hsingle hdegree.symm
 
 lemma g_odd_ne_zero (c : ℂ) (hc : c ^ 2 + c = 1) (i : ℕ+) : g c (2 * (i : ℕ) + 1) ≠ 0 := by
   intro hzero
   have hdegree := degree_g_odd c hc i
-  rw [hzero, CaseIMonomialOrder.degree_zero] at hdegree
+  rw [hzero, caseIMonomialOrder.degree_zero] at hdegree
   have htarget : Finsupp.single i 1 + Finsupp.single (next i) 1 ≠ 0 := by
     intro h
     have hle : Finsupp.single i 1 ≤
@@ -1942,15 +1942,15 @@ lemma rho_family_three_lt_balanced {k : ℕ} (hk : 2 ≤ k) :
     nlinarith
 lemma secondMoment_degree_x_mul_g (c : ℂ) (hc : c ^ 2 + c = 1) {N r : ℕ}
     (hr : 1 ≤ r) (hrN : r + 2 ≤ N) :
-    secondMoment (CaseIMonomialOrder.degree (x r * g c (N - r))) = rho N r := by
+    secondMoment (caseIMonomialOrder.degree (x r * g c (N - r))) = rho N r := by
   let rp : ℕ+ := ⟨r, by omega⟩
   have hx : x r = X rp := by simpa [rp] using x_eq_X rp
   rcases Nat.even_or_odd' (N - r) with ⟨j, hj | hj⟩
   · have hjpos : 0 < j := by omega
     let jp : ℕ+ := ⟨j, hjpos⟩
     have hg0 := g_even_ne_zero c jp
-    rw [hx, CaseIMonomialOrder.degree_mul (by simp) (by simpa [jp, hj] using hg0),
-      CaseIMonomialOrder.degree_X, show g c (N - r) = g c (2 * (jp : ℕ)) by simp [jp, hj],
+    rw [hx, caseIMonomialOrder.degree_mul (by simp) (by simpa [jp, hj] using hg0),
+      caseIMonomialOrder.degree_X, show g c (N - r) = g c (2 * (jp : ℕ)) by simp [jp, hj],
       degree_g_even c jp, secondMoment_add]
     simp only [secondMoment_single]
     simp [rho, balancedSecondMoment, rp, jp, hj]
@@ -1960,8 +1960,8 @@ lemma secondMoment_degree_x_mul_g (c : ℂ) (hc : c ^ 2 + c = 1) {N r : ℕ}
   · have hjpos : 0 < j := by omega
     let jp : ℕ+ := ⟨j, hjpos⟩
     have hg0 := g_odd_ne_zero c hc jp
-    rw [hx, CaseIMonomialOrder.degree_mul (by simp) (by simpa [jp, hj] using hg0),
-      CaseIMonomialOrder.degree_X,
+    rw [hx, caseIMonomialOrder.degree_mul (by simp) (by simpa [jp, hj] using hg0),
+      caseIMonomialOrder.degree_X,
       show g c (N - r) = g c (2 * (jp : ℕ) + 1) by simp [jp, hj],
       degree_g_odd c hc jp, secondMoment_add, secondMoment_add]
     simp only [secondMoment_single]
@@ -1972,15 +1972,15 @@ lemma secondMoment_degree_x_mul_g (c : ℂ) (hc : c ^ 2 + c = 1) {N r : ℕ}
 
 lemma weightedDegree_degree_x_mul_g (c : ℂ) (hc : c ^ 2 + c = 1) {N r : ℕ}
     (hr : 1 ≤ r) (hrN : r + 2 ≤ N) :
-    weightedDegree (CaseIMonomialOrder.degree (x r * g c (N - r))) = N := by
+    weightedDegree (caseIMonomialOrder.degree (x r * g c (N - r))) = N := by
   let rp : ℕ+ := ⟨r, by omega⟩
   have hx : x r = X rp := by simpa [rp] using x_eq_X rp
   rcases Nat.even_or_odd' (N - r) with ⟨j, hj | hj⟩
   · have hjpos : 0 < j := by omega
     let jp : ℕ+ := ⟨j, hjpos⟩
     have hg0 := g_even_ne_zero c jp
-    rw [hx, CaseIMonomialOrder.degree_mul (by simp) (by simpa [jp, hj] using hg0),
-      CaseIMonomialOrder.degree_X, show g c (N - r) = g c (2 * (jp : ℕ)) by simp [jp, hj],
+    rw [hx, caseIMonomialOrder.degree_mul (by simp) (by simpa [jp, hj] using hg0),
+      caseIMonomialOrder.degree_X, show g c (N - r) = g c (2 * (jp : ℕ)) by simp [jp, hj],
       degree_g_even c jp, weightedDegree_add]
     simp only [weightedDegree_single]
     simp [rp, jp]
@@ -1988,8 +1988,8 @@ lemma weightedDegree_degree_x_mul_g (c : ℂ) (hc : c ^ 2 + c = 1) {N r : ℕ}
   · have hjpos : 0 < j := by omega
     let jp : ℕ+ := ⟨j, hjpos⟩
     have hg0 := g_odd_ne_zero c hc jp
-    rw [hx, CaseIMonomialOrder.degree_mul (by simp) (by simpa [jp, hj] using hg0),
-      CaseIMonomialOrder.degree_X,
+    rw [hx, caseIMonomialOrder.degree_mul (by simp) (by simpa [jp, hj] using hg0),
+      caseIMonomialOrder.degree_X,
       show g c (N - r) = g c (2 * (jp : ℕ) + 1) by simp [jp, hj],
       degree_g_odd c hc jp, weightedDegree_add, weightedDegree_add]
     simp only [weightedDegree_single]
@@ -1999,8 +1999,8 @@ lemma weightedDegree_degree_x_mul_g (c : ℂ) (hc : c ^ 2 + c = 1) {N r : ℕ}
 lemma degree_x_mul_g_lt_of_rho_lt (c : ℂ) (hc : c ^ 2 + c = 1) {N r s : ℕ}
     (hr : 1 ≤ r) (hrN : r + 2 ≤ N) (hs : 1 ≤ s) (hsN : s + 2 ≤ N)
     (hρ : rho N r < rho N s) :
-    CaseIMonomialOrder.degree (x s * g c (N - s)) ≺[CaseIMonomialOrder]
-      CaseIMonomialOrder.degree (x r * g c (N - r)) := by
+    caseIMonomialOrder.degree (x s * g c (N - s)) ≺[caseIMonomialOrder]
+      caseIMonomialOrder.degree (x r * g c (N - r)) := by
   rw [caseIMonomialOrder_lt_iff]
   right
   refine ⟨?_, Or.inl ?_⟩
@@ -2011,14 +2011,14 @@ lemma degree_x_mul_g_lt_of_rho_lt (c : ℂ) (hc : c ^ 2 + c = 1) {N r s : ℕ}
     exact hρ
 
 lemma degree_normalized_g_odd (c : ℂ) (hc : c ^ 2 + c = 1) (i : ℕ+) :
-    CaseIMonomialOrder.degree (C c⁻¹ * g c (2 * (i : ℕ) + 1) : S) =
+    caseIMonomialOrder.degree (C c⁻¹ * g c (2 * (i : ℕ) + 1) : S) =
       Finsupp.single i 1 + Finsupp.single (next i) 1 := by
   have hc0 : c ≠ 0 := ne_zero_of_quadratic c hc
-  rw [CaseIMonomialOrder.degree_mul (by simp [hc0]) (g_odd_ne_zero c hc i),
-    CaseIMonomialOrder.degree_C, zero_add, degree_g_odd c hc i]
+  rw [caseIMonomialOrder.degree_mul (by simp [hc0]) (g_odd_ne_zero c hc i),
+    caseIMonomialOrder.degree_C, zero_add, degree_g_odd c hc i]
 
 lemma weightedDegree_degree_normalizedRelation (c : ℂ) (hc : c ^ 2 + c = 1) {n : ℕ} (hn : 2 ≤ n) :
-    weightedDegree (CaseIMonomialOrder.degree (normalizedRelation c n)) = n := by
+    weightedDegree (caseIMonomialOrder.degree (normalizedRelation c n)) = n := by
   rcases Nat.even_or_odd' n with ⟨k, hk | hk⟩
   · have hkpos : 0 < k := by omega
     let kp : ℕ+ := ⟨k, hkpos⟩
@@ -2038,7 +2038,7 @@ lemma weightedDegree_degree_normalizedRelation (c : ℂ) (hc : c ^ 2 + c = 1) {n
     omega
 
 lemma secondMoment_degree_normalizedRelation (c : ℂ) (hc : c ^ 2 + c = 1) {n : ℕ} (hn : 2 ≤ n) :
-    secondMoment (CaseIMonomialOrder.degree (normalizedRelation c n)) = balancedSecondMoment n := by
+    secondMoment (caseIMonomialOrder.degree (normalizedRelation c n)) = balancedSecondMoment n := by
   rcases Nat.even_or_odd' n with ⟨k, hk | hk⟩
   · have hkpos : 0 < k := by omega
     let kp : ℕ+ := ⟨k, hkpos⟩
@@ -2068,7 +2068,7 @@ lemma secondMoment_degree_normalizedRelation (c : ℂ) (hc : c ^ 2 + c = 1) {n :
 lemma normalizedRelation_injective_of_two_le (c : ℂ) (hc : c ^ 2 + c = 1) {a b : ℕ}
     (ha : 2 ≤ a) (hb : 2 ≤ b) (h : normalizedRelation c a = normalizedRelation c b) :
     a = b := by
-  have hd := congrArg (fun p : S ↦ weightedDegree (CaseIMonomialOrder.degree p)) h
+  have hd := congrArg (fun p : S ↦ weightedDegree (caseIMonomialOrder.degree p)) h
   rw [weightedDegree_degree_normalizedRelation c hc ha,
     weightedDegree_degree_normalizedRelation c hc hb] at hd
   exact hd
@@ -2076,8 +2076,8 @@ lemma normalizedRelation_injective_of_two_le (c : ℂ) (hc : c ^ 2 + c = 1) {a b
 lemma degree_normalizedRelation_lt_x_mul_g (c : ℂ) (hc : c ^ 2 + c = 1) {N r : ℕ}
     (hN : 2 ≤ N) (hr : 1 ≤ r) (hrN : r + 2 ≤ N)
     (hρ : rho N r < balancedSecondMoment N) :
-    CaseIMonomialOrder.degree (normalizedRelation c N) ≺[CaseIMonomialOrder]
-      CaseIMonomialOrder.degree (x r * g c (N - r)) := by
+    caseIMonomialOrder.degree (normalizedRelation c N) ≺[caseIMonomialOrder]
+      caseIMonomialOrder.degree (x r * g c (N - r)) := by
   rw [caseIMonomialOrder_lt_iff]
   right
   refine ⟨?_, Or.inl ?_⟩
@@ -2093,8 +2093,8 @@ lemma degree_C_mul_le (m : MonomialOrder ℕ+) (a : ℂ) (p : S) :
 
 lemma degree_x_mul_normalizedRelation_eq (c : ℂ) (hc : c ^ 2 + c = 1) {N r : ℕ}
     (hr : 1 ≤ r) (hrN : r + 2 ≤ N) :
-    CaseIMonomialOrder.degree (x r * normalizedRelation c (N - r)) =
-      CaseIMonomialOrder.degree (x r * g c (N - r)) := by
+    caseIMonomialOrder.degree (x r * normalizedRelation c (N - r)) =
+      caseIMonomialOrder.degree (x r * g c (N - r)) := by
   rcases Nat.even_or_odd' (N - r) with ⟨k, hk | hk⟩
   · rw [normalizedRelation, if_pos (by omega)]
   · have hkpos : 0 < k := by omega
@@ -2107,8 +2107,8 @@ lemma degree_x_mul_normalizedRelation_eq (c : ℂ) (hc : c ^ 2 + c = 1) {N r : �
     rw [normalizedRelation, if_neg (by omega)]
     have hreorder : x r * (C c⁻¹ * g c (N - r)) =
         C c⁻¹ * (x r * g c (N - r)) := by ring
-    rw [hreorder, CaseIMonomialOrder.degree_mul (by simp [ne_zero_of_quadratic c hc])
-      (mul_ne_zero hx0 hg0), CaseIMonomialOrder.degree_C, zero_add]
+    rw [hreorder, caseIMonomialOrder.degree_mul (by simp [ne_zero_of_quadratic c hc])
+      (mul_ne_zero hx0 hg0), caseIMonomialOrder.degree_C, zero_add]
 
 noncomputable def standardSummand (c : ℂ) (N r : ℕ) : S :=
   C (pentagonTermCoefficient c N r * normalizationScalar c (N - r)) *
@@ -2133,11 +2133,11 @@ lemma degree_standardMain_le (c : ℂ) (m : MonomialOrder ℕ+) (N : ℕ) :
 
 lemma family_one_standardSummand_lt (c : ℂ) (hc : c ^ 2 + c = 1) {k r : ℕ} (hk : 1 ≤ k)
     (hr : r ∈ (((Finset.range (3 * k)).erase 0).erase k).erase (k + 1)) :
-    CaseIMonomialOrder.degree (standardSummand c (3 * k + 1) r) ≺[CaseIMonomialOrder]
-      CaseIMonomialOrder.degree (x k * g c (2 * k + 1)) := by
+    caseIMonomialOrder.degree (standardSummand c (3 * k + 1) r) ≺[caseIMonomialOrder]
+      caseIMonomialOrder.degree (x k * g c (2 * k + 1)) := by
   have hrs := hr
   simp only [Finset.mem_erase, Finset.mem_range] at hrs
-  apply lt_of_le_of_lt (degree_standardSummand_le c CaseIMonomialOrder (3 * k + 1) r)
+  apply lt_of_le_of_lt (degree_standardSummand_le c caseIMonomialOrder (3 * k + 1) r)
   rw [degree_x_mul_normalizedRelation_eq c hc (by omega) (by omega)]
   have hlt := degree_x_mul_g_lt_of_rho_lt c hc
     (N := 3 * k + 1) (r := k) (s := r) (by omega) (by omega) (by omega) (by omega)
@@ -2145,11 +2145,11 @@ lemma family_one_standardSummand_lt (c : ℂ) (hc : c ^ 2 + c = 1) {k r : ℕ} (
   simpa [show 3 * k + 1 - k = 2 * k + 1 by omega] using hlt
 
 lemma family_one_standardMain_lt (c : ℂ) (hc : c ^ 2 + c = 1) {k : ℕ} (hk : 1 ≤ k) :
-    CaseIMonomialOrder.degree
+    caseIMonomialOrder.degree
         (C (pentagonMainCoefficient c (3 * k + 1) * normalizationScalar c (3 * k + 1)) *
-          normalizedRelation c (3 * k + 1)) ≺[CaseIMonomialOrder]
-      CaseIMonomialOrder.degree (x k * g c (2 * k + 1)) := by
-  apply lt_of_le_of_lt (degree_standardMain_le c CaseIMonomialOrder (3 * k + 1))
+          normalizedRelation c (3 * k + 1)) ≺[caseIMonomialOrder]
+      caseIMonomialOrder.degree (x k * g c (2 * k + 1)) := by
+  apply lt_of_le_of_lt (degree_standardMain_le c caseIMonomialOrder (3 * k + 1))
   have hlt := degree_normalizedRelation_lt_x_mul_g c hc
     (N := 3 * k + 1) (r := k) (by omega) (by omega) (by omega)
     (rho_family_one_lt_balanced hk)
@@ -2157,11 +2157,11 @@ lemma family_one_standardMain_lt (c : ℂ) (hc : c ^ 2 + c = 1) {k : ℕ} (hk : 
 
 lemma family_two_standardSummand_lt (c : ℂ) (hc : c ^ 2 + c = 1) {k r : ℕ} (hk : 1 ≤ k)
     (hr : r ∈ (((Finset.range (3 * k + 1)).erase 0).erase k).erase (k + 1)) :
-    CaseIMonomialOrder.degree (standardSummand c (3 * k + 2) r) ≺[CaseIMonomialOrder]
-      CaseIMonomialOrder.degree (x k * g c (2 * (k + 1))) := by
+    caseIMonomialOrder.degree (standardSummand c (3 * k + 2) r) ≺[caseIMonomialOrder]
+      caseIMonomialOrder.degree (x k * g c (2 * (k + 1))) := by
   have hrs := hr
   simp only [Finset.mem_erase, Finset.mem_range] at hrs
-  apply lt_of_le_of_lt (degree_standardSummand_le c CaseIMonomialOrder (3 * k + 2) r)
+  apply lt_of_le_of_lt (degree_standardSummand_le c caseIMonomialOrder (3 * k + 2) r)
   rw [degree_x_mul_normalizedRelation_eq c hc (by omega) (by omega)]
   have hlt := degree_x_mul_g_lt_of_rho_lt c hc
     (N := 3 * k + 2) (r := k) (s := r) (by omega) (by omega) (by omega) (by omega)
@@ -2169,11 +2169,11 @@ lemma family_two_standardSummand_lt (c : ℂ) (hc : c ^ 2 + c = 1) {k r : ℕ} (
   simpa [show 3 * k + 2 - k = 2 * (k + 1) by omega] using hlt
 
 lemma family_two_standardMain_lt (c : ℂ) (hc : c ^ 2 + c = 1) {k : ℕ} (hk : 1 ≤ k) :
-    CaseIMonomialOrder.degree
+    caseIMonomialOrder.degree
         (C (pentagonMainCoefficient c (3 * k + 2) * normalizationScalar c (3 * k + 2)) *
-          normalizedRelation c (3 * k + 2)) ≺[CaseIMonomialOrder]
-      CaseIMonomialOrder.degree (x k * g c (2 * (k + 1))) := by
-  apply lt_of_le_of_lt (degree_standardMain_le c CaseIMonomialOrder (3 * k + 2))
+          normalizedRelation c (3 * k + 2)) ≺[caseIMonomialOrder]
+      caseIMonomialOrder.degree (x k * g c (2 * (k + 1))) := by
+  apply lt_of_le_of_lt (degree_standardMain_le c caseIMonomialOrder (3 * k + 2))
   have hlt := degree_normalizedRelation_lt_x_mul_g c hc
     (N := 3 * k + 2) (r := k) (by omega) (by omega) (by omega)
     (rho_family_two_lt_balanced hk)
@@ -2181,11 +2181,11 @@ lemma family_two_standardMain_lt (c : ℂ) (hc : c ^ 2 + c = 1) {k : ℕ} (hk : 
 
 lemma family_three_standardSummand_lt (c : ℂ) (hc : c ^ 2 + c = 1) {k r : ℕ} (hk : 2 ≤ k) (hr : r ∈
       ((((Finset.range (3 * k - 1)).erase 0).erase (k - 1)).erase k).erase (k + 1)) :
-    CaseIMonomialOrder.degree (standardSummand c (3 * k) r) ≺[CaseIMonomialOrder]
-      CaseIMonomialOrder.degree (x (k - 1) * g c (2 * k + 1)) := by
+    caseIMonomialOrder.degree (standardSummand c (3 * k) r) ≺[caseIMonomialOrder]
+      caseIMonomialOrder.degree (x (k - 1) * g c (2 * k + 1)) := by
   have hrs := hr
   simp only [Finset.mem_erase, Finset.mem_range] at hrs
-  apply lt_of_le_of_lt (degree_standardSummand_le c CaseIMonomialOrder (3 * k) r)
+  apply lt_of_le_of_lt (degree_standardSummand_le c caseIMonomialOrder (3 * k) r)
   rw [degree_x_mul_normalizedRelation_eq c hc (by omega) (by omega)]
   have hlt := degree_x_mul_g_lt_of_rho_lt c hc
     (N := 3 * k) (r := k - 1) (s := r)
@@ -2194,40 +2194,40 @@ lemma family_three_standardSummand_lt (c : ℂ) (hc : c ^ 2 + c = 1) {k r : ℕ}
   simpa [show 3 * k - (k - 1) = 2 * k + 1 by omega] using hlt
 
 lemma family_three_standardMain_lt (c : ℂ) (hc : c ^ 2 + c = 1) {k : ℕ} (hk : 2 ≤ k) :
-    CaseIMonomialOrder.degree
+    caseIMonomialOrder.degree
         (C (pentagonMainCoefficient c (3 * k) * normalizationScalar c (3 * k)) *
-          normalizedRelation c (3 * k)) ≺[CaseIMonomialOrder]
-      CaseIMonomialOrder.degree (x (k - 1) * g c (2 * k + 1)) := by
-  apply lt_of_le_of_lt (degree_standardMain_le c CaseIMonomialOrder (3 * k))
+          normalizedRelation c (3 * k)) ≺[caseIMonomialOrder]
+      caseIMonomialOrder.degree (x (k - 1) * g c (2 * k + 1)) := by
+  apply lt_of_le_of_lt (degree_standardMain_le c caseIMonomialOrder (3 * k))
   have hlt := degree_normalizedRelation_lt_x_mul_g c hc
     (N := 3 * k) (r := k - 1) (by omega) (by omega) (by omega)
     (rho_family_three_lt_balanced hk)
   simpa [show 3 * k - (k - 1) = 2 * k + 1 by omega] using hlt
 
 lemma monic_g_even (c : ℂ) (i : ℕ+) :
-    CaseIMonomialOrder.Monic (g c (2 * (i : ℕ))) := by
+    caseIMonomialOrder.Monic (g c (2 * (i : ℕ))) := by
   rw [MonomialOrder.Monic, MonomialOrder.leadingCoeff,
     degree_g_even c, coeff_g_even_top]
 
 lemma monic_normalized_g_odd (c : ℂ) (hc : c ^ 2 + c = 1) (i : ℕ+) :
-    CaseIMonomialOrder.Monic (C c⁻¹ * g c (2 * (i : ℕ) + 1) : S) := by
+    caseIMonomialOrder.Monic (C c⁻¹ * g c (2 * (i : ℕ) + 1) : S) := by
   rw [MonomialOrder.Monic, MonomialOrder.leadingCoeff,
     degree_normalized_g_odd c hc, coeff_C_mul, coeff_g_odd_top]
   exact inv_mul_cancel₀ (ne_zero_of_quadratic c hc)
 
 lemma G_monic (c : ℂ) (hc : c ^ 2 + c = 1) :
-    ∀ p ∈ G c, CaseIMonomialOrder.Monic p := by
+    ∀ p ∈ G c, caseIMonomialOrder.Monic p := by
   intro p hp
   rcases hp with ⟨i, rfl⟩ | ⟨i, rfl⟩
   · exact monic_g_even c i
   · exact monic_normalized_g_odd c hc i
 
 lemma sPolynomial_even_odd_adjacent (c : ℂ) (hc : c ^ 2 + c = 1) (i : ℕ+) :
-    CaseIMonomialOrder.sPolynomial (g c (2 * (i : ℕ)))
+    caseIMonomialOrder.sPolynomial (g c (2 * (i : ℕ)))
         (C c⁻¹ * g c (2 * (i : ℕ) + 1) : S) =
       x (next i : ℕ) * g c (2 * (i : ℕ)) -
         x (i : ℕ) * (C c⁻¹ * g c (2 * (i : ℕ) + 1)) := by
-  rw [CaseIMonomialOrder.sPolynomial_def, degree_g_even c,
+  rw [caseIMonomialOrder.sPolynomial_def, degree_g_even c,
     degree_normalized_g_odd c hc,
     (monic_g_even c i).leadingCoeff_eq_one,
     (monic_normalized_g_odd c hc i).leadingCoeff_eq_one,
@@ -2261,11 +2261,11 @@ lemma sPolynomial_even_odd_adjacent (c : ℂ) (hc : c ^ 2 + c = 1) (i : ℕ+) :
   rfl
 
 lemma sPolynomial_odd_even_adjacent (c : ℂ) (hc : c ^ 2 + c = 1) (i : ℕ+) :
-    CaseIMonomialOrder.sPolynomial (C c⁻¹ * g c (2 * (i : ℕ) + 1) : S)
+    caseIMonomialOrder.sPolynomial (C c⁻¹ * g c (2 * (i : ℕ) + 1) : S)
         (g c (2 * (next i : ℕ))) =
       x (next i : ℕ) * (C c⁻¹ * g c (2 * (i : ℕ) + 1)) -
         x (i : ℕ) * g c (2 * (next i : ℕ)) := by
-  rw [CaseIMonomialOrder.sPolynomial_def, degree_normalized_g_odd c hc,
+  rw [caseIMonomialOrder.sPolynomial_def, degree_normalized_g_odd c hc,
     degree_g_even c,
     (monic_normalized_g_odd c hc i).leadingCoeff_eq_one,
     (monic_g_even c (next i)).leadingCoeff_eq_one,
@@ -2299,11 +2299,11 @@ lemma sPolynomial_odd_even_adjacent (c : ℂ) (hc : c ^ 2 + c = 1) (i : ℕ+) :
   rfl
 
 lemma sPolynomial_odd_odd_adjacent (c : ℂ) (hc : c ^ 2 + c = 1) (i : ℕ+) :
-    CaseIMonomialOrder.sPolynomial (C c⁻¹ * g c (2 * (i : ℕ) + 1) : S)
+    caseIMonomialOrder.sPolynomial (C c⁻¹ * g c (2 * (i : ℕ) + 1) : S)
         (C c⁻¹ * g c (2 * (next i : ℕ) + 1) : S) =
       x (next (next i) : ℕ) * (C c⁻¹ * g c (2 * (i : ℕ) + 1)) -
         x (i : ℕ) * (C c⁻¹ * g c (2 * (next i : ℕ) + 1)) := by
-  rw [CaseIMonomialOrder.sPolynomial_def, degree_normalized_g_odd c hc,
+  rw [caseIMonomialOrder.sPolynomial_def, degree_normalized_g_odd c hc,
     degree_normalized_g_odd c hc,
     (monic_normalized_g_odd c hc i).leadingCoeff_eq_one,
     (monic_normalized_g_odd c hc (next i)).leadingCoeff_eq_one,
@@ -2350,7 +2350,7 @@ lemma sPolynomial_odd_odd_adjacent (c : ℂ) (hc : c ^ 2 + c = 1) (i : ℕ+) :
 
 lemma family_one_syzygy_standard (c : ℂ) (hc : c ^ 2 + c = 1) {k : ℕ} (hk : 1 ≤ k) :
     C (pentagonScale c * c) *
-          CaseIMonomialOrder.sPolynomial (g c (2 * k)) (C c⁻¹ * g c (2 * k + 1) : S) +
+          caseIMonomialOrder.sPolynomial (g c (2 * k)) (C c⁻¹ * g c (2 * k + 1) : S) +
         C (pentagonMainCoefficient c (3 * k + 1) *
             normalizationScalar c (3 * k + 1)) *
           normalizedRelation c (3 * k + 1) +
@@ -2379,7 +2379,7 @@ lemma family_one_syzygy_standard (c : ℂ) (hc : c ^ 2 + c = 1) {k : ℕ} (hk : 
     simp [normalizedRelation]
   rw [hodd, heven] at h
   have hsPoly := sPolynomial_even_odd_adjacent c hc i
-  change CaseIMonomialOrder.sPolynomial (g c (2 * k)) (C c⁻¹ * g c (2 * k + 1)) =
+  change caseIMonomialOrder.sPolynomial (g c (2 * k)) (C c⁻¹ * g c (2 * k + 1)) =
     x (k + 1) * g c (2 * k) - x k * (C c⁻¹ * g c (2 * k + 1)) at hsPoly
   rw [hsPoly]
   have hneg : -pentagonScale c * c = -(pentagonScale c * c) := by ring
@@ -2388,7 +2388,7 @@ lemma family_one_syzygy_standard (c : ℂ) (hc : c ^ 2 + c = 1) {k : ℕ} (hk : 
 
 lemma family_two_syzygy_standard (c : ℂ) (hc : c ^ 2 + c = 1) {k : ℕ} (hk : 1 ≤ k) :
     C (pentagonScale c * c) *
-          CaseIMonomialOrder.sPolynomial (C c⁻¹ * g c (2 * k + 1) : S) (g c (2 * (k + 1))) +
+          caseIMonomialOrder.sPolynomial (C c⁻¹ * g c (2 * k + 1) : S) (g c (2 * (k + 1))) +
         C (pentagonMainCoefficient c (3 * k + 2) *
             normalizationScalar c (3 * k + 2)) *
           normalizedRelation c (3 * k + 2) +
@@ -2417,7 +2417,7 @@ lemma family_two_syzygy_standard (c : ℂ) (hc : c ^ 2 + c = 1) {k : ℕ} (hk : 
     simp [normalizedRelation]
   rw [heven, hodd] at h
   have hsPoly := sPolynomial_odd_even_adjacent c hc i
-  change CaseIMonomialOrder.sPolynomial (C c⁻¹ * g c (2 * k + 1)) (g c (2 * (k + 1))) =
+  change caseIMonomialOrder.sPolynomial (C c⁻¹ * g c (2 * k + 1)) (g c (2 * (k + 1))) =
     x (k + 1) * (C c⁻¹ * g c (2 * k + 1)) - x k * g c (2 * (k + 1)) at hsPoly
   rw [hsPoly]
   have hneg : -pentagonScale c * c = -(pentagonScale c * c) := by ring
@@ -2427,7 +2427,7 @@ lemma family_two_syzygy_standard (c : ℂ) (hc : c ^ 2 + c = 1) {k : ℕ} (hk : 
 set_option maxHeartbeats 800000 in
 lemma family_three_syzygy_standard (c : ℂ) (hc : c ^ 2 + c = 1) {k : ℕ} (hk : 2 ≤ k) :
     C (-(pentagonScale c * c ^ 2)) *
-          CaseIMonomialOrder.sPolynomial (C c⁻¹ * g c (2 * k - 1) : S)
+          caseIMonomialOrder.sPolynomial (C c⁻¹ * g c (2 * k - 1) : S)
             (C c⁻¹ * g c (2 * k + 1) : S) +
         C (pentagonMainCoefficient c (3 * k) * normalizationScalar c (3 * k)) *
           normalizedRelation c (3 * k) +
@@ -2478,7 +2478,7 @@ lemma family_three_syzygy_standard (c : ℂ) (hc : c ^ 2 + c = 1) {k : ℕ} (hk 
     omega
   have hprevArg : 2 * (i : ℕ) + 1 = 2 * k - 1 := by omega
   have hnextArg : 2 * (next i : ℕ) + 1 = 2 * k + 1 := by omega
-  have hsPoly : CaseIMonomialOrder.sPolynomial (C c⁻¹ * g c (2 * k - 1))
+  have hsPoly : caseIMonomialOrder.sPolynomial (C c⁻¹ * g c (2 * k - 1))
       (C c⁻¹ * g c (2 * k + 1)) =
         x (k + 1) * (C c⁻¹ * g c (2 * k - 1)) -
           x (k - 1) * (C c⁻¹ * g c (2 * k + 1)) := by
@@ -2491,9 +2491,9 @@ lemma family_three_syzygy_standard (c : ℂ) (hc : c ^ 2 + c = 1) {k : ℕ} (hk 
   exact h
 
 lemma G_leadingCoeff_isUnit (c : ℂ) (hc : c ^ 2 + c = 1) :
-    ∀ p ∈ G c, IsUnit (CaseIMonomialOrder.leadingCoeff p) := by
+    ∀ p ∈ G c, IsUnit (caseIMonomialOrder.leadingCoeff p) := by
   intro p hp
-  rw [isUnit_iff_ne_zero, CaseIMonomialOrder.leadingCoeff_ne_zero_iff]
+  rw [isUnit_iff_ne_zero, caseIMonomialOrder.leadingCoeff_ne_zero_iff]
   rcases hp with ⟨i, rfl⟩ | ⟨i, rfl⟩
   · exact g_even_ne_zero c i
   · exact mul_ne_zero (by simp [ne_zero_of_quadratic c hc])
@@ -2502,9 +2502,9 @@ lemma G_leadingCoeff_isUnit (c : ℂ) (hc : c ^ 2 + c = 1) :
 lemma isRemainder_zero_of_finset_representation (c : ℂ) (hc : c ^ 2 + c = 1) (p : S)
     (B : Finset (G c)) (q : G c → S)
     (hsum : p = ∑ b ∈ B, q b * b.val)
-    (hdeg : ∀ b ∈ B, CaseIMonomialOrder.degree (b.val * q b) ≼[CaseIMonomialOrder]
-      CaseIMonomialOrder.degree p) :
-    CaseIMonomialOrder.IsRemainder p (G c) 0 := by
+    (hdeg : ∀ b ∈ B, caseIMonomialOrder.degree (b.val * q b) ≼[caseIMonomialOrder]
+      caseIMonomialOrder.degree p) :
+    caseIMonomialOrder.IsRemainder p (G c) 0 := by
   rw [MonomialOrder.IsRemainder.isRemainder_iff_degree
     (f := p) (B := G c) (r := 0)
     (fun b hb ↦ (G_leadingCoeff_isUnit c hc b hb).mem_nonZeroDivisors)]
@@ -2736,9 +2736,9 @@ lemma sup_odd_odd_eq_add {i j : ℕ+} (hij : i ≠ j)
 
 set_option maxHeartbeats 800000 in
 lemma family_one_hasStandardRepresentation (c : ℂ) (hc : c ^ 2 + c = 1) {k : ℕ} (hk : 1 ≤ k) :
-    CaseIMonomialOrder.HasStandardRepresentation (G c)
-      (CaseIMonomialOrder.sPolynomial (g c (2 * k)) (C c⁻¹ * g c (2 * k + 1) : S))
-      (CaseIMonomialOrder.toSyn (CaseIMonomialOrder.degree (x k * g c (2 * k + 1)))) := by
+    caseIMonomialOrder.HasStandardRepresentation (G c)
+      (caseIMonomialOrder.sPolynomial (g c (2 * k)) (C c⁻¹ * g c (2 * k + 1) : S))
+      (caseIMonomialOrder.toSyn (caseIMonomialOrder.degree (x k * g c (2 * k + 1)))) := by
   let L := (((Finset.range (3 * k)).erase 0).erase k).erase (k + 1)
   let ι := Option {r : ℕ // r ∈ L}
   let b : ι → G c
@@ -2754,23 +2754,23 @@ lemma family_one_hasStandardRepresentation (c : ℂ) (hc : c ^ 2 + c = 1) {k : �
         normalizationScalar c (3 * k + 1))
     | some r => C (pentagonTermCoefficient c (3 * k + 1) r.val *
         normalizationScalar c (3 * k + 1 - r.val)) * x r.val
-  have hd : 0 < CaseIMonomialOrder.toSyn (CaseIMonomialOrder.degree (x k * g c (2 * k + 1))) := by
-    rw [CaseIMonomialOrder.toSyn_lt_iff_ne_zero, CaseIMonomialOrder.toSyn.map_ne_zero_iff]
+  have hd : 0 < caseIMonomialOrder.toSyn (caseIMonomialOrder.degree (x k * g c (2 * k + 1))) := by
+    rw [caseIMonomialOrder.toSyn_lt_iff_ne_zero, caseIMonomialOrder.toSyn.map_ne_zero_iff]
     intro hzero
     have hw := weightedDegree_degree_x_mul_g c hc
       (N := 3 * k + 1) (r := k) (by omega) (by omega)
     rw [show 3 * k + 1 - k = 2 * k + 1 by omega, hzero] at hw
     simp [weightedDegree] at hw
-  apply hasStandardRepresentation_of_finset CaseIMonomialOrder (G c) _ _ hd
+  apply hasStandardRepresentation_of_finset caseIMonomialOrder (G c) _ _ hd
     (pentagonScale c * c) (mul_ne_zero (pentagonScale_ne_zero c hc)
       (ne_zero_of_quadratic c hc)) Finset.univ b a
   · change C (pentagonScale c * c) *
-        CaseIMonomialOrder.sPolynomial (g c (2 * k)) (C c⁻¹ * g c (2 * k + 1) : S) +
+        caseIMonomialOrder.sPolynomial (g c (2 * k)) (C c⁻¹ * g c (2 * k + 1) : S) +
       ∑ i : ι, a i * (b i).val = 0
     rw [Fintype.sum_option]
     dsimp only [a, b]
     change C (pentagonScale c * c) *
-        CaseIMonomialOrder.sPolynomial (g c (2 * k)) (C c⁻¹ * g c (2 * k + 1) : S) +
+        caseIMonomialOrder.sPolynomial (g c (2 * k)) (C c⁻¹ * g c (2 * k + 1) : S) +
       (C (pentagonMainCoefficient c (3 * k + 1) * normalizationScalar c (3 * k + 1)) *
           normalizedRelation c (3 * k + 1) +
         ∑ r ∈ L.attach, standardSummand c (3 * k + 1) r.val) = 0
@@ -2788,9 +2788,9 @@ lemma family_one_hasStandardRepresentation (c : ℂ) (hc : c ^ 2 + c = 1) {k : �
 
 set_option maxHeartbeats 800000 in
 lemma family_two_hasStandardRepresentation (c : ℂ) (hc : c ^ 2 + c = 1) {k : ℕ} (hk : 1 ≤ k) :
-    CaseIMonomialOrder.HasStandardRepresentation (G c)
-      (CaseIMonomialOrder.sPolynomial (C c⁻¹ * g c (2 * k + 1) : S) (g c (2 * (k + 1))))
-      (CaseIMonomialOrder.toSyn (CaseIMonomialOrder.degree (x k * g c (2 * (k + 1))))) := by
+    caseIMonomialOrder.HasStandardRepresentation (G c)
+      (caseIMonomialOrder.sPolynomial (C c⁻¹ * g c (2 * k + 1) : S) (g c (2 * (k + 1))))
+      (caseIMonomialOrder.toSyn (caseIMonomialOrder.degree (x k * g c (2 * (k + 1))))) := by
   let L := (((Finset.range (3 * k + 1)).erase 0).erase k).erase (k + 1)
   let ι := Option {r : ℕ // r ∈ L}
   let b : ι → G c
@@ -2806,23 +2806,23 @@ lemma family_two_hasStandardRepresentation (c : ℂ) (hc : c ^ 2 + c = 1) {k : �
         normalizationScalar c (3 * k + 2))
     | some r => C (pentagonTermCoefficient c (3 * k + 2) r.val *
         normalizationScalar c (3 * k + 2 - r.val)) * x r.val
-  have hd : 0 < CaseIMonomialOrder.toSyn (CaseIMonomialOrder.degree (x k * g c (2 * (k + 1)))) := by
-    rw [CaseIMonomialOrder.toSyn_lt_iff_ne_zero, CaseIMonomialOrder.toSyn.map_ne_zero_iff]
+  have hd : 0 < caseIMonomialOrder.toSyn (caseIMonomialOrder.degree (x k * g c (2 * (k + 1)))) := by
+    rw [caseIMonomialOrder.toSyn_lt_iff_ne_zero, caseIMonomialOrder.toSyn.map_ne_zero_iff]
     intro hzero
     have hw := weightedDegree_degree_x_mul_g c hc
       (N := 3 * k + 2) (r := k) (by omega) (by omega)
     rw [show 3 * k + 2 - k = 2 * (k + 1) by omega, hzero] at hw
     simp [weightedDegree] at hw
-  apply hasStandardRepresentation_of_finset CaseIMonomialOrder (G c) _ _ hd
+  apply hasStandardRepresentation_of_finset caseIMonomialOrder (G c) _ _ hd
     (pentagonScale c * c) (mul_ne_zero (pentagonScale_ne_zero c hc)
       (ne_zero_of_quadratic c hc)) Finset.univ b a
   · change C (pentagonScale c * c) *
-        CaseIMonomialOrder.sPolynomial (C c⁻¹ * g c (2 * k + 1) : S) (g c (2 * (k + 1))) +
+        caseIMonomialOrder.sPolynomial (C c⁻¹ * g c (2 * k + 1) : S) (g c (2 * (k + 1))) +
       ∑ i : ι, a i * (b i).val = 0
     rw [Fintype.sum_option]
     dsimp only [a, b]
     change C (pentagonScale c * c) *
-        CaseIMonomialOrder.sPolynomial (C c⁻¹ * g c (2 * k + 1) : S) (g c (2 * (k + 1))) +
+        caseIMonomialOrder.sPolynomial (C c⁻¹ * g c (2 * k + 1) : S) (g c (2 * (k + 1))) +
       (C (pentagonMainCoefficient c (3 * k + 2) * normalizationScalar c (3 * k + 2)) *
           normalizedRelation c (3 * k + 2) +
         ∑ r ∈ L.attach, standardSummand c (3 * k + 2) r.val) = 0
@@ -2840,10 +2840,10 @@ lemma family_two_hasStandardRepresentation (c : ℂ) (hc : c ^ 2 + c = 1) {k : �
 
 set_option maxHeartbeats 800000 in
 lemma family_three_hasStandardRepresentation (c : ℂ) (hc : c ^ 2 + c = 1) {k : ℕ} (hk : 2 ≤ k) :
-    CaseIMonomialOrder.HasStandardRepresentation (G c)
-      (CaseIMonomialOrder.sPolynomial (C c⁻¹ * g c (2 * k - 1) : S)
+    caseIMonomialOrder.HasStandardRepresentation (G c)
+      (caseIMonomialOrder.sPolynomial (C c⁻¹ * g c (2 * k - 1) : S)
         (C c⁻¹ * g c (2 * k + 1) : S))
-      (CaseIMonomialOrder.toSyn (CaseIMonomialOrder.degree (x (k - 1) * g c (2 * k + 1)))) := by
+      (caseIMonomialOrder.toSyn (caseIMonomialOrder.degree (x (k - 1) * g c (2 * k + 1)))) := by
   let L := ((((Finset.range (3 * k - 1)).erase 0).erase (k - 1)).erase k).erase (k + 1)
   let ι := Option {r : ℕ // r ∈ L}
   let b : ι → G c
@@ -2858,26 +2858,26 @@ lemma family_three_hasStandardRepresentation (c : ℂ) (hc : c ^ 2 + c = 1) {k :
     | some r => C (pentagonTermCoefficient c (3 * k) r.val *
         normalizationScalar c (3 * k - r.val)) * x r.val
   have hd :
-      0 < CaseIMonomialOrder.toSyn (CaseIMonomialOrder.degree (x (k - 1) * g c (2 * k + 1))) := by
-    rw [CaseIMonomialOrder.toSyn_lt_iff_ne_zero, CaseIMonomialOrder.toSyn.map_ne_zero_iff]
+      0 < caseIMonomialOrder.toSyn (caseIMonomialOrder.degree (x (k - 1) * g c (2 * k + 1))) := by
+    rw [caseIMonomialOrder.toSyn_lt_iff_ne_zero, caseIMonomialOrder.toSyn.map_ne_zero_iff]
     intro hzero
     have hw := weightedDegree_degree_x_mul_g c hc
       (N := 3 * k) (r := k - 1) (by omega) (by omega)
     rw [show 3 * k - (k - 1) = 2 * k + 1 by omega, hzero] at hw
     simp [weightedDegree] at hw
     omega
-  apply hasStandardRepresentation_of_finset CaseIMonomialOrder (G c) _ _ hd
+  apply hasStandardRepresentation_of_finset caseIMonomialOrder (G c) _ _ hd
     (-(pentagonScale c * c ^ 2))
     (neg_ne_zero.mpr (mul_ne_zero (pentagonScale_ne_zero c hc)
       (pow_ne_zero 2 (ne_zero_of_quadratic c hc)))) Finset.univ b a
   · change C (-(pentagonScale c * c ^ 2)) *
-        CaseIMonomialOrder.sPolynomial (C c⁻¹ * g c (2 * k - 1) : S)
+        caseIMonomialOrder.sPolynomial (C c⁻¹ * g c (2 * k - 1) : S)
           (C c⁻¹ * g c (2 * k + 1) : S) +
       ∑ i : ι, a i * (b i).val = 0
     rw [Fintype.sum_option]
     dsimp only [a, b]
     change C (-(pentagonScale c * c ^ 2)) *
-        CaseIMonomialOrder.sPolynomial (C c⁻¹ * g c (2 * k - 1) : S)
+        caseIMonomialOrder.sPolynomial (C c⁻¹ * g c (2 * k - 1) : S)
           (C c⁻¹ * g c (2 * k + 1) : S) +
       (C (pentagonMainCoefficient c (3 * k) * normalizationScalar c (3 * k)) *
           normalizedRelation c (3 * k) +
@@ -2895,17 +2895,17 @@ lemma family_three_hasStandardRepresentation (c : ℂ) (hc : c ^ 2 + c = 1) {k :
           (family_three_standardSummand_lt c hc hk r.prop)
 
 lemma degree_family_one_top_eq_sup (c : ℂ) (hc : c ^ 2 + c = 1) {k : ℕ} (hk : 1 ≤ k) :
-    CaseIMonomialOrder.degree (x k * g c (2 * k + 1)) =
-      CaseIMonomialOrder.degree (g c (2 * k)) ⊔
-        CaseIMonomialOrder.degree (C c⁻¹ * g c (2 * k + 1) : S) := by
+    caseIMonomialOrder.degree (x k * g c (2 * k + 1)) =
+      caseIMonomialOrder.degree (g c (2 * k)) ⊔
+        caseIMonomialOrder.degree (C c⁻¹ * g c (2 * k + 1) : S) := by
   let i : ℕ+ := ⟨k, hk⟩
   have hx : x k = X i := by simpa [i] using x_eq_X i
   rw [hx]
-  change CaseIMonomialOrder.degree (X i * g c (2 * (i : ℕ) + 1)) =
-    CaseIMonomialOrder.degree (g c (2 * (i : ℕ))) ⊔
-      CaseIMonomialOrder.degree (C c⁻¹ * g c (2 * (i : ℕ) + 1) : S)
-  rw [CaseIMonomialOrder.degree_mul (by simp) (g_odd_ne_zero c hc i),
-    CaseIMonomialOrder.degree_X, degree_g_odd c hc i,
+  change caseIMonomialOrder.degree (X i * g c (2 * (i : ℕ) + 1)) =
+    caseIMonomialOrder.degree (g c (2 * (i : ℕ))) ⊔
+      caseIMonomialOrder.degree (C c⁻¹ * g c (2 * (i : ℕ) + 1) : S)
+  rw [caseIMonomialOrder.degree_mul (by simp) (g_odd_ne_zero c hc i),
+    caseIMonomialOrder.degree_X, degree_g_odd c hc i,
     degree_g_even c i, degree_normalized_g_odd c hc i]
   ext j
   by_cases hji : j = i
@@ -2917,17 +2917,17 @@ lemma degree_family_one_top_eq_sup (c : ℂ) (hc : c ^ 2 + c = 1) {k : ℕ} (hk 
   simp [Finsupp.sup_apply, hji, hjnext]
 
 lemma degree_family_two_top_eq_sup (c : ℂ) (hc : c ^ 2 + c = 1) {k : ℕ} (hk : 1 ≤ k) :
-    CaseIMonomialOrder.degree (x k * g c (2 * (k + 1))) =
-      CaseIMonomialOrder.degree (C c⁻¹ * g c (2 * k + 1) : S) ⊔
-        CaseIMonomialOrder.degree (g c (2 * (k + 1))) := by
+    caseIMonomialOrder.degree (x k * g c (2 * (k + 1))) =
+      caseIMonomialOrder.degree (C c⁻¹ * g c (2 * k + 1) : S) ⊔
+        caseIMonomialOrder.degree (g c (2 * (k + 1))) := by
   let i : ℕ+ := ⟨k, hk⟩
   have hx : x k = X i := by simpa [i] using x_eq_X i
   rw [hx]
-  change CaseIMonomialOrder.degree (X i * g c (2 * (next i : ℕ))) =
-    CaseIMonomialOrder.degree (C c⁻¹ * g c (2 * (i : ℕ) + 1) : S) ⊔
-      CaseIMonomialOrder.degree (g c (2 * (next i : ℕ)))
-  rw [CaseIMonomialOrder.degree_mul (by simp) (g_even_ne_zero c (next i)),
-    CaseIMonomialOrder.degree_X,
+  change caseIMonomialOrder.degree (X i * g c (2 * (next i : ℕ))) =
+    caseIMonomialOrder.degree (C c⁻¹ * g c (2 * (i : ℕ) + 1) : S) ⊔
+      caseIMonomialOrder.degree (g c (2 * (next i : ℕ)))
+  rw [caseIMonomialOrder.degree_mul (by simp) (g_even_ne_zero c (next i)),
+    caseIMonomialOrder.degree_X,
     degree_g_even c (next i),
     degree_normalized_g_odd c hc i]
   ext j
@@ -2940,9 +2940,9 @@ lemma degree_family_two_top_eq_sup (c : ℂ) (hc : c ^ 2 + c = 1) {k : ℕ} (hk 
   simp [Finsupp.sup_apply, hji, hjnext]
 
 lemma degree_family_three_top_eq_sup (c : ℂ) (hc : c ^ 2 + c = 1) {k : ℕ} (hk : 2 ≤ k) :
-    CaseIMonomialOrder.degree (x (k - 1) * g c (2 * k + 1)) =
-      CaseIMonomialOrder.degree (C c⁻¹ * g c (2 * k - 1) : S) ⊔
-        CaseIMonomialOrder.degree (C c⁻¹ * g c (2 * k + 1) : S) := by
+    caseIMonomialOrder.degree (x (k - 1) * g c (2 * k + 1)) =
+      caseIMonomialOrder.degree (C c⁻¹ * g c (2 * k - 1) : S) ⊔
+        caseIMonomialOrder.degree (C c⁻¹ * g c (2 * k + 1) : S) := by
   let i : ℕ+ := ⟨k - 1, by omega⟩
   have hnext : (next i : ℕ) = k := by simp [i, next]; omega
   have hx : x (k - 1) = X i := by simpa [i] using x_eq_X i
@@ -2950,9 +2950,9 @@ lemma degree_family_three_top_eq_sup (c : ℂ) (hc : c ^ 2 + c = 1) {k : ℕ} (h
     simp [i]
     omega
   have hnextArg : 2 * k + 1 = 2 * (next i : ℕ) + 1 := by omega
-  rw [hx, hnextArg, hprevArg, CaseIMonomialOrder.degree_mul (by simp)
+  rw [hx, hnextArg, hprevArg, caseIMonomialOrder.degree_mul (by simp)
       (by simpa [hnext] using g_odd_ne_zero c hc (next i)),
-    CaseIMonomialOrder.degree_X,
+    caseIMonomialOrder.degree_X,
     degree_g_odd c hc (next i),
     degree_normalized_g_odd c hc i,
     degree_normalized_g_odd c hc (next i)]
@@ -2974,45 +2974,45 @@ lemma degree_family_three_top_eq_sup (c : ℂ) (hc : c ^ 2 + c = 1) {k : ℕ} (h
   simp [Finsupp.sup_apply, hji, hjnext, hjnextnext]
 
 lemma family_one_hasStandardRepresentation_lcm (c : ℂ) (hc : c ^ 2 + c = 1) {k : ℕ} (hk : 1 ≤ k) :
-    CaseIMonomialOrder.HasStandardRepresentation (G c)
-      (CaseIMonomialOrder.sPolynomial (g c (2 * k)) (C c⁻¹ * g c (2 * k + 1) : S))
-      (CaseIMonomialOrder.toSyn (CaseIMonomialOrder.degree (g c (2 * k)) ⊔
-        CaseIMonomialOrder.degree (C c⁻¹ * g c (2 * k + 1) : S))) := by
+    caseIMonomialOrder.HasStandardRepresentation (G c)
+      (caseIMonomialOrder.sPolynomial (g c (2 * k)) (C c⁻¹ * g c (2 * k + 1) : S))
+      (caseIMonomialOrder.toSyn (caseIMonomialOrder.degree (g c (2 * k)) ⊔
+        caseIMonomialOrder.degree (C c⁻¹ * g c (2 * k + 1) : S))) := by
   rw [← degree_family_one_top_eq_sup c hc hk]
   exact family_one_hasStandardRepresentation c hc hk
 
 lemma family_two_hasStandardRepresentation_lcm (c : ℂ) (hc : c ^ 2 + c = 1) {k : ℕ} (hk : 1 ≤ k) :
-    CaseIMonomialOrder.HasStandardRepresentation (G c)
-      (CaseIMonomialOrder.sPolynomial (C c⁻¹ * g c (2 * k + 1) : S) (g c (2 * (k + 1))))
-      (CaseIMonomialOrder.toSyn (CaseIMonomialOrder.degree (C c⁻¹ * g c (2 * k + 1) : S) ⊔
-        CaseIMonomialOrder.degree (g c (2 * (k + 1))))) := by
+    caseIMonomialOrder.HasStandardRepresentation (G c)
+      (caseIMonomialOrder.sPolynomial (C c⁻¹ * g c (2 * k + 1) : S) (g c (2 * (k + 1))))
+      (caseIMonomialOrder.toSyn (caseIMonomialOrder.degree (C c⁻¹ * g c (2 * k + 1) : S) ⊔
+        caseIMonomialOrder.degree (g c (2 * (k + 1))))) := by
   rw [← degree_family_two_top_eq_sup c hc hk]
   exact family_two_hasStandardRepresentation c hc hk
 
 lemma family_three_hasStandardRepresentation_lcm (c : ℂ) (hc : c ^ 2 + c = 1) {k : ℕ} (hk : 2 ≤ k) :
-    CaseIMonomialOrder.HasStandardRepresentation (G c)
-      (CaseIMonomialOrder.sPolynomial (C c⁻¹ * g c (2 * k - 1) : S)
+    caseIMonomialOrder.HasStandardRepresentation (G c)
+      (caseIMonomialOrder.sPolynomial (C c⁻¹ * g c (2 * k - 1) : S)
         (C c⁻¹ * g c (2 * k + 1) : S))
-      (CaseIMonomialOrder.toSyn (CaseIMonomialOrder.degree (C c⁻¹ * g c (2 * k - 1) : S) ⊔
-        CaseIMonomialOrder.degree (C c⁻¹ * g c (2 * k + 1) : S))) := by
+      (caseIMonomialOrder.toSyn (caseIMonomialOrder.degree (C c⁻¹ * g c (2 * k - 1) : S) ⊔
+        caseIMonomialOrder.degree (C c⁻¹ * g c (2 * k + 1) : S))) := by
   rw [← degree_family_three_top_eq_sup c hc hk]
   exact family_three_hasStandardRepresentation c hc hk
 
 set_option maxHeartbeats 1000000 in
 lemma all_sPolynomials_haveStandardRepresentation (c : ℂ) (hc : c ^ 2 + c = 1) :
-    ∀ f g : G c, CaseIMonomialOrder.HasStandardRepresentation (G c)
-      (CaseIMonomialOrder.sPolynomial f.val g.val)
-      (CaseIMonomialOrder.toSyn
-        (CaseIMonomialOrder.degree f.val ⊔ CaseIMonomialOrder.degree g.val)) := by
+    ∀ f g : G c, caseIMonomialOrder.HasStandardRepresentation (G c)
+      (caseIMonomialOrder.sPolynomial f.val g.val)
+      (caseIMonomialOrder.toSyn
+        (caseIMonomialOrder.degree f.val ⊔ caseIMonomialOrder.degree g.val)) := by
   rintro ⟨f, hf⟩ ⟨g', hg⟩
   rcases hf with ⟨i, rfl⟩ | ⟨i, rfl⟩ <;>
     rcases hg with ⟨j, rfl⟩ | ⟨j, rfl⟩
   · by_cases hij : i = j
     · subst j
-      simpa using zero_hasStandardRepresentation CaseIMonomialOrder (G c)
-        (CaseIMonomialOrder.toSyn (CaseIMonomialOrder.degree (g c (2 * (i : ℕ))) ⊔
-          CaseIMonomialOrder.degree (g c (2 * (i : ℕ)))))
-    · apply product_hasStandardRepresentation CaseIMonomialOrder (G c)
+      simpa using zero_hasStandardRepresentation caseIMonomialOrder (G c)
+        (caseIMonomialOrder.toSyn (caseIMonomialOrder.degree (g c (2 * (i : ℕ))) ⊔
+          caseIMonomialOrder.degree (g c (2 * (i : ℕ)))))
+    · apply product_hasStandardRepresentation caseIMonomialOrder (G c)
       · exact Or.inl ⟨i, rfl⟩
       · exact Or.inl ⟨j, rfl⟩
       · exact g_even_ne_zero c i
@@ -3029,7 +3029,7 @@ lemma all_sPolynomials_haveStandardRepresentation (c : ℂ) (hc : c ^ 2 + c = 1)
       have h := HasStandardRepresentation.sPolynomial_swap
         (family_two_hasStandardRepresentation_lcm c hc j.prop)
       exact h
-    · apply product_hasStandardRepresentation CaseIMonomialOrder (G c)
+    · apply product_hasStandardRepresentation caseIMonomialOrder (G c)
       · exact Or.inl ⟨i, rfl⟩
       · exact Or.inr ⟨j, rfl⟩
       · exact g_even_ne_zero c i
@@ -3047,7 +3047,7 @@ lemma all_sPolynomials_haveStandardRepresentation (c : ℂ) (hc : c ^ 2 + c = 1)
     by_cases hnext : next i = j
     · subst j
       exact family_two_hasStandardRepresentation_lcm c hc i.prop
-    · apply product_hasStandardRepresentation CaseIMonomialOrder (G c)
+    · apply product_hasStandardRepresentation caseIMonomialOrder (G c)
       · exact Or.inr ⟨i, rfl⟩
       · exact Or.inl ⟨j, rfl⟩
       · exact mul_ne_zero (by simp [ne_zero_of_quadratic c hc])
@@ -3060,8 +3060,8 @@ lemma all_sPolynomials_haveStandardRepresentation (c : ℂ) (hc : c ^ 2 + c = 1)
         rw [sup_even_odd_eq_add (Ne.symm hij) (Ne.symm hnext), add_comm]
   · by_cases hij : i = j
     · subst j
-      rw [CaseIMonomialOrder.sPolynomial_self]
-      exact zero_hasStandardRepresentation CaseIMonomialOrder (G c) _
+      rw [caseIMonomialOrder.sPolynomial_self]
+      exact zero_hasStandardRepresentation caseIMonomialOrder (G c) _
     by_cases hnexti : next i = j
     · subst j
       have hjtwo : 2 ≤ (next i : ℕ) := by
@@ -3084,7 +3084,7 @@ lemma all_sPolynomials_haveStandardRepresentation (c : ℂ) (hc : c ^ 2 + c = 1)
         omega
       rw [hprev] at h
       exact HasStandardRepresentation.sPolynomial_swap h
-    · apply product_hasStandardRepresentation CaseIMonomialOrder (G c)
+    · apply product_hasStandardRepresentation caseIMonomialOrder (G c)
       · exact Or.inr ⟨i, rfl⟩
       · exact Or.inr ⟨j, rfl⟩
       · exact mul_ne_zero (by simp [ne_zero_of_quadratic c hc])
@@ -3105,7 +3105,7 @@ noncomputable def J : Ideal S :=
         monomial (Finsupp.single i 1 + Finsupp.single (next i) 1) 1))
 
 lemma degree_image_G (c : ℂ) (hc : c ^ 2 + c = 1) :
-    CaseIMonomialOrder.degree '' G c =
+    caseIMonomialOrder.degree '' G c =
       Set.range (fun i : ℕ+ ↦ Finsupp.single i 2) ∪
         Set.range (fun i : ℕ+ ↦
           Finsupp.single i 1 + Finsupp.single (next i) 1) := by
@@ -3121,14 +3121,14 @@ lemma degree_image_G (c : ℂ) (hc : c ^ 2 + c = 1) :
         degree_normalized_g_odd c hc i⟩
 
 lemma span_leadingTerm_G_eq_J (c : ℂ) (hc : c ^ 2 + c = 1) :
-    Ideal.span (CaseIMonomialOrder.leadingTerm '' G c) = J := by
-  rw [CaseIMonomialOrder.span_leadingTerm_eq_span_monomial (G_leadingCoeff_isUnit c hc)]
-  have himage : (fun p : S ↦ monomial (CaseIMonomialOrder.degree p) 1) '' G c =
-      (fun a : ℕ+ →₀ ℕ ↦ monomial a (1 : ℂ)) '' (CaseIMonomialOrder.degree '' G c) := by
+    Ideal.span (caseIMonomialOrder.leadingTerm '' G c) = J := by
+  rw [caseIMonomialOrder.span_leadingTerm_eq_span_monomial (G_leadingCoeff_isUnit c hc)]
+  have himage : (fun p : S ↦ monomial (caseIMonomialOrder.degree p) 1) '' G c =
+      (fun a : ℕ+ →₀ ℕ ↦ monomial a (1 : ℂ)) '' (caseIMonomialOrder.degree '' G c) := by
     rw [Set.image_image]
   calc
-    Ideal.span ((fun p : S ↦ monomial (CaseIMonomialOrder.degree p) 1) '' G c) =
-        Ideal.span ((fun a : ℕ+ →₀ ℕ ↦ monomial a (1 : ℂ)) '' (CaseIMonomialOrder.degree '' G c)) :=
+    Ideal.span ((fun p : S ↦ monomial (caseIMonomialOrder.degree p) 1) '' G c) =
+        Ideal.span ((fun a : ℕ+ →₀ ℕ ↦ monomial a (1 : ℂ)) '' (caseIMonomialOrder.degree '' G c)) :=
       congrArg Ideal.span himage
     _ = J := by
       rw [degree_image_G c hc]
@@ -3139,14 +3139,14 @@ lemma span_leadingTerm_G_eq_J (c : ℂ) (hc : c ^ 2 + c = 1) :
       aesop
 
 lemma initialIdeal_eq_J_of_isGroebnerBasis (c : ℂ) (hc : c ^ 2 + c = 1)
-    (hG : CaseIMonomialOrder.IsGroebnerBasis (G c) (I c)) :
-    Ideal.span (CaseIMonomialOrder.leadingTerm '' (I c : Set S)) = J := by
+    (hG : caseIMonomialOrder.IsGroebnerBasis (G c) (I c)) :
+    Ideal.span (caseIMonomialOrder.leadingTerm '' (I c : Set S)) = J := by
   rw [hG.span_leadingTerm_image]
   exact span_leadingTerm_G_eq_J c hc
 
 /-- The Gröbner-basis assertion of Proposition 4.3; see also `G_isReduced`. -/
 lemma G_isGroebnerBasis (c : ℂ) (hc : c ^ 2 + c = 1) :
-    CaseIMonomialOrder.IsGroebnerBasis (G c) (I c) := by
+    caseIMonomialOrder.IsGroebnerBasis (G c) (I c) := by
   have h := MonomialOrder.IsGroebnerBasis.isGroebnerBasis_of_hasStandardRepresentation_sPolynomial
     (G_leadingCoeff_isUnit c hc)
     (all_sPolynomials_haveStandardRepresentation c hc)
@@ -3578,7 +3578,7 @@ lemma support_g_odd_eq_top_or_gap (c : ℂ) (i : ℕ+) {a : ℕ+ →₀ ℕ}
     omega
 
 lemma generator_degree_not_le_gap (c : ℂ) (hc : c ^ 2 + c = 1) {a : ℕ+ →₀ ℕ}
-    (ha : IsGapStandard a) {q : S} (hq : q ∈ G c) : ¬CaseIMonomialOrder.degree q ≤ a := by
+    (ha : IsGapStandard a) {q : S} (hq : q ∈ G c) : ¬caseIMonomialOrder.degree q ≤ a := by
   rcases hq with ⟨i, rfl⟩ | ⟨i, rfl⟩
   · rw [degree_g_even c i]
     intro hle
@@ -3599,7 +3599,7 @@ lemma generator_degree_not_le_gap (c : ℂ) (hc : c ^ 2 + c = 1) {a : ℕ+ →�
     exact hnext0 ((ha i).2 hi0)
 
 lemma generator_eq_of_degree_le_square (c : ℂ) (hc : c ^ 2 + c = 1) (i : ℕ+) {q : S}
-    (hq : q ∈ G c) (hle : CaseIMonomialOrder.degree q ≤ Finsupp.single i 2) :
+    (hq : q ∈ G c) (hle : caseIMonomialOrder.degree q ≤ Finsupp.single i 2) :
     q = g c (2 * (i : ℕ)) := by
   rcases hq with ⟨j, rfl⟩ | ⟨j, rfl⟩
   · rw [degree_g_even c j] at hle
@@ -3619,7 +3619,7 @@ lemma generator_eq_of_degree_le_square (c : ℂ) (hc : c ^ 2 + c = 1) (i : ℕ+)
 
 lemma generator_eq_of_degree_le_adjacent (c : ℂ) (hc : c ^ 2 + c = 1) (i : ℕ+) {q : S}
     (hq : q ∈ G c)
-    (hle : CaseIMonomialOrder.degree q ≤ Finsupp.single i 1 + Finsupp.single (next i) 1) :
+    (hle : caseIMonomialOrder.degree q ≤ Finsupp.single i 1 + Finsupp.single (next i) 1) :
     q = (C c⁻¹ * g c (2 * (i : ℕ) + 1) : S) := by
   rcases hq with ⟨j, rfl⟩ | ⟨j, rfl⟩
   · rw [degree_g_even c j] at hle
@@ -3667,17 +3667,17 @@ lemma G_isReduced (c : ℂ) (hc : c ^ 2 + c = 1) :
 
 /--
 Theorem 1.2 over `ℂ`, together with the leading-monomial formulas of Lemma 4.2.
-The leading monomial is represented by its exponent vector `CaseIMonomialOrder.degree`.
+The leading monomial is represented by its exponent vector `caseIMonomialOrder.degree`.
 The quotient assertion is represented by bijectivity of `allowedToQuotient`; grading preservation
 is established separately by `weightedHomogeneousComponent_allowedRename` and
 `quotientToAllowed_mk_isWeightedHomogeneous`.
 -/
 theorem theorem_1_2 (c : ℂ) (hc : c ^ 2 + c = 1) :
-    ∃ hG : CaseIMonomialOrder.IsGroebnerBasis (G c) (I c),
+    ∃ hG : caseIMonomialOrder.IsGroebnerBasis (G c) (I c),
       hG.IsReduced ∧
-        Ideal.span (CaseIMonomialOrder.leadingTerm '' (I c : Set S)) = J ∧
-        (∀ i : ℕ+, CaseIMonomialOrder.degree (g c (2 * (i : ℕ))) = Finsupp.single i 2) ∧
-        (∀ i : ℕ+, CaseIMonomialOrder.degree (g c (2 * (i : ℕ) + 1)) =
+        Ideal.span (caseIMonomialOrder.leadingTerm '' (I c : Set S)) = J ∧
+        (∀ i : ℕ+, caseIMonomialOrder.degree (g c (2 * (i : ℕ))) = Finsupp.single i 2) ∧
+        (∀ i : ℕ+, caseIMonomialOrder.degree (g c (2 * (i : ℕ) + 1)) =
           Finsupp.single i 1 + Finsupp.single (next i) 1) ∧
         Function.Bijective (allowedToQuotient c) := by
   refine ⟨G_isGroebnerBasis c hc, G_isReduced c hc,
@@ -3900,7 +3900,7 @@ noncomputable def standardQuotientEquiv {m : MonomialOrder ℕ+} {B : Set S} {K 
   LinearEquiv.ofBijective (standardToQuotient hB) (standardToQuotient_bijective hB hred)
 
 lemma isStandardExponent_iff_gap (c : ℂ) (hc : c ^ 2 + c = 1) (a : ℕ+ →₀ ℕ) :
-    IsStandardExponent CaseIMonomialOrder (G c) a ↔ IsGapStandard a := by
+    IsStandardExponent caseIMonomialOrder (G c) a ↔ IsGapStandard a := by
   constructor
   · intro h i
     constructor
@@ -3966,7 +3966,7 @@ lemma I_isWeightedHomogeneous (c : ℂ) (hc : c ^ 2 + c = 1) :
   exact ⟨n, g_isWeightedHomogeneous c hn.1⟩
 
 lemma normalForm_isWeightedHomogeneous (c : ℂ) (hc : c ^ 2 + c = 1)
-    (hG : CaseIMonomialOrder.IsGroebnerBasis (G c) (I c)) (hred : hG.IsReduced) {p : S} {n : ℕ}
+    (hG : caseIMonomialOrder.IsGroebnerBasis (G c) (I c)) (hred : hG.IsReduced) {p : S} {n : ℕ}
     (hp : MvPolynomial.IsWeightedHomogeneous (fun i : ℕ+ ↦ (i : ℕ)) p n) :
     MvPolynomial.IsWeightedHomogeneous (fun i : ℕ+ ↦ (i : ℕ)) (normalForm hG hred p) n := by
   intro a ha
@@ -3999,7 +3999,7 @@ lemma normalForm_isWeightedHomogeneous (c : ℂ) (hc : c ^ 2 + c = 1)
     have hneg : -rk ∈ I c := by
       simpa [rk, r, map_sub, hpk] using hcomponent
     exact (I c).neg_mem_iff.mp hneg
-  have hrkStandard : rk ∈ StandardPolynomial CaseIMonomialOrder (G c) := by
+  have hrkStandard : rk ∈ StandardPolynomial caseIMonomialOrder (G c) := by
     rw [StandardPolynomial, MvPolynomial.restrictSupport, AddMonoidAlgebra.mem_supported]
     intro d hd
     apply (isStandardExponent_iff_gap c hc d).mpr
@@ -4015,7 +4015,7 @@ lemma normalForm_isWeightedHomogeneous (c : ℂ) (hc : c ^ 2 + c = 1)
     dsimp only [rk] at hd'
     rw [MvPolynomial.coeff_weightedHomogeneousComponent] at hd'
     split at hd' <;> simp_all
-  let rks : StandardPolynomial CaseIMonomialOrder (G c) := ⟨rk, hrkStandard⟩
+  let rks : StandardPolynomial caseIMonomialOrder (G c) := ⟨rk, hrkStandard⟩
   have hrksZero : standardToQuotient hG rks = 0 := by
     change Ideal.Quotient.mk (I c) rk = 0
     exact Ideal.Quotient.eq_zero_iff_mem.mpr hrkI
@@ -4151,11 +4151,11 @@ lemma allowedStandardEquiv_coe (c : ℂ) (hc : c ^ 2 + c = 1)
   rw [normalForm_quotient_eq hG hred, ← allowedToQuotient_eq_mk_allowedRename]
 
 lemma allowedStandardEquiv_isWeightedHomogeneous (c : ℂ) (hc : c ^ 2 + c = 1)
-    (hG : CaseIMonomialOrder.IsGroebnerBasis (G c) (I c)) (hred : hG.IsReduced)
+    (hG : caseIMonomialOrder.IsGroebnerBasis (G c) (I c)) (hred : hG.IsReduced)
     {p : AllowedPolynomial} {n : ℕ}
     (hp : MvPolynomial.IsWeightedHomogeneous allowedWeight p n) :
     MvPolynomial.IsWeightedHomogeneous (fun i : ℕ+ ↦ (i : ℕ))
-      (allowedStandardEquiv c hc CaseIMonomialOrder hG hred p : S) n := by
+      (allowedStandardEquiv c hc caseIMonomialOrder hG hred p : S) n := by
   rw [allowedStandardEquiv_coe]
   apply normalForm_isWeightedHomogeneous c hc hG hred
   intro d hd
@@ -4256,17 +4256,17 @@ lemma gapDegree_isWeightedHomogeneous {n : ℕ} (p : GapDegreePolynomial n) :
   exact ((AddMonoidAlgebra.mem_supported.mp p.2) (mem_support_iff.mpr ha)).1
 
 lemma gapDegree_mem_standard (c : ℂ) (hc : c ^ 2 + c = 1) {n : ℕ}
-    (p : GapDegreePolynomial n) : (p : S) ∈ StandardPolynomial CaseIMonomialOrder (G c) := by
+    (p : GapDegreePolynomial n) : (p : S) ∈ StandardPolynomial caseIMonomialOrder (G c) := by
   rw [StandardPolynomial, MvPolynomial.restrictSupport, AddMonoidAlgebra.mem_supported]
   intro a ha
   apply (isStandardExponent_iff_gap c hc a).mpr
   exact ((AddMonoidAlgebra.mem_supported.mp p.2) ha).2
 
 noncomputable def degreeNormalFormEquiv (c : ℂ) (hc : c ^ 2 + c = 1)
-    (hG : CaseIMonomialOrder.IsGroebnerBasis (G c) (I c)) (hred : hG.IsReduced) (n : ℕ) :
+    (hG : caseIMonomialOrder.IsGroebnerBasis (G c) (I c)) (hred : hG.IsReduced) (n : ℕ) :
     AllowedDegreePolynomial n ≃ₗ[ℂ] GapDegreePolynomial n where
   toFun p := by
-    let r := allowedStandardEquiv c hc CaseIMonomialOrder hG hred (p : AllowedPolynomial)
+    let r := allowedStandardEquiv c hc caseIMonomialOrder hG hred (p : AllowedPolynomial)
     refine ⟨(r : S), ?_⟩
     rw [GapDegreePolynomial, MvPolynomial.restrictSupport,
       AddMonoidAlgebra.mem_supported]
@@ -4279,35 +4279,35 @@ noncomputable def degreeNormalFormEquiv (c : ℂ) (hc : c ^ 2 + c = 1)
     · apply (isStandardExponent_iff_gap c hc a).mp
       exact (AddMonoidAlgebra.mem_supported.mp r.2) ha
   invFun r := by
-    let rs : StandardPolynomial CaseIMonomialOrder (G c) := ⟨(r : S), gapDegree_mem_standard c hc r⟩
-    let p := (allowedStandardEquiv c hc CaseIMonomialOrder hG hred).symm rs
+    let rs : StandardPolynomial caseIMonomialOrder (G c) := ⟨(r : S), gapDegree_mem_standard c hc r⟩
+    let p := (allowedStandardEquiv c hc caseIMonomialOrder hG hred).symm rs
     refine ⟨p, ?_⟩
     rw [AllowedDegreePolynomial, MvPolynomial.restrictSupport,
       AddMonoidAlgebra.mem_supported]
     intro a ha
-    exact (allowedStandardEquiv_symm_isWeightedHomogeneous c hc CaseIMonomialOrder hG hred
+    exact (allowedStandardEquiv_symm_isWeightedHomogeneous c hc caseIMonomialOrder hG hred
       (gapDegree_isWeightedHomogeneous r)) (mem_support_iff.mp ha)
   left_inv p := by
     apply Subtype.ext
     dsimp only
-    exact (allowedStandardEquiv c hc CaseIMonomialOrder hG hred).symm_apply_apply
+    exact (allowedStandardEquiv c hc caseIMonomialOrder hG hred).symm_apply_apply
       (p : AllowedPolynomial)
   right_inv r := by
     apply Subtype.ext
     dsimp only
     exact congrArg Subtype.val
-      ((allowedStandardEquiv c hc CaseIMonomialOrder hG hred).apply_symm_apply
-        (⟨(r : S), gapDegree_mem_standard c hc r⟩ : StandardPolynomial CaseIMonomialOrder (G c)))
+      ((allowedStandardEquiv c hc caseIMonomialOrder hG hred).apply_symm_apply
+        (⟨(r : S), gapDegree_mem_standard c hc r⟩ : StandardPolynomial caseIMonomialOrder (G c)))
   map_add' p q := by
     apply Subtype.ext
     dsimp only
     exact congrArg Subtype.val
-      ((allowedStandardEquiv c hc CaseIMonomialOrder hG hred).map_add (p : AllowedPolynomial) q)
+      ((allowedStandardEquiv c hc caseIMonomialOrder hG hred).map_add (p : AllowedPolynomial) q)
   map_smul' z p := by
     apply Subtype.ext
     dsimp only
     exact congrArg Subtype.val
-      ((allowedStandardEquiv c hc CaseIMonomialOrder hG hred).map_smul z (p : AllowedPolynomial))
+      ((allowedStandardEquiv c hc caseIMonomialOrder hG hred).map_smul z (p : AllowedPolynomial))
 
 noncomputable def allowedDegreeBasis (n : ℕ) :
     Module.Basis (P n) ℂ (AllowedDegreePolynomial n) :=
@@ -4415,7 +4415,7 @@ In every weighted degree, the support of the normal-form matrix contains a perfe
 between `P(n)` and `Q(n)`. The linear isomorphism underlying the matrix is `degreeNormalFormEquiv`.
 -/
 theorem proposition_5_1 (c : ℂ) (hc : c ^ 2 + c = 1)
-    (hG : CaseIMonomialOrder.IsGroebnerBasis (G c) (I c)) (hred : hG.IsReduced) (n : ℕ) :
+    (hG : caseIMonomialOrder.IsGroebnerBasis (G c) (I c)) (hred : hG.IsReduced) (n : ℕ) :
     ∃ π : P n ≃ Q n,
       ∀ lam : P n,
         (normalForm hG hred (partitionMonomial lam.val)).coeff
@@ -4433,12 +4433,12 @@ theorem proposition_5_1 (c : ℂ) (hc : c ^ 2 + c = 1)
       normalForm hG hred (partitionMonomial lam.val) := by
     calc
       ((bNF lam : GapDegreePolynomial n) : S) =
-          (allowedStandardEquiv c hc CaseIMonomialOrder hG hred
+          (allowedStandardEquiv c hc caseIMonomialOrder hG hred
             ((allowedDegreeBasis n lam : AllowedDegreePolynomial n) : AllowedPolynomial) : S) := rfl
       _ = normalForm hG hred
           (allowedRename
             ((allowedDegreeBasis n lam : AllowedDegreePolynomial n) : AllowedPolynomial)) :=
-        allowedStandardEquiv_coe c hc CaseIMonomialOrder hG hred _
+        allowedStandardEquiv_coe c hc caseIMonomialOrder hG hred _
       _ = normalForm hG hred (partitionMonomial lam.val) := by
         rw [allowedDegreeBasis_rename]
   simpa [hb] using h
