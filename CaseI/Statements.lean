@@ -1172,28 +1172,28 @@ lemma finite_weightedDegree_fiber (n : ℕ) :
     exact Nat.lt_succ_of_le (value_le_weightedDegree a i)
 
 /-- A type synonym carrying the monomial order used in Case I. -/
-def CaseIMonomialSyn := ℕ+ →₀ ℕ
+def caseIMonomialSyn := ℕ+ →₀ ℕ
 
 /-- The identity equivalence into `CaseIMonomialSyn`. -/
-@[match_pattern] def toCaseIMonomialSyn : (ℕ+ →₀ ℕ) ≃ CaseIMonomialSyn := Equiv.refl _
+@[match_pattern] def toCaseIMonomialSyn : (ℕ+ →₀ ℕ) ≃ caseIMonomialSyn := Equiv.refl _
 
 /-- The identity equivalence out of `CaseIMonomialSyn`. -/
-@[match_pattern] def ofCaseIMonomialSyn : CaseIMonomialSyn ≃ (ℕ+ →₀ ℕ) := Equiv.refl _
+@[match_pattern] def ofCaseIMonomialSyn : caseIMonomialSyn ≃ (ℕ+ →₀ ℕ) := Equiv.refl _
 
 @[simp] lemma ofCaseIMonomialSyn_toCaseIMonomialSyn (a : ℕ+ →₀ ℕ) :
     ofCaseIMonomialSyn (toCaseIMonomialSyn a) = a := rfl
 
-noncomputable instance : AddCommMonoid CaseIMonomialSyn :=
+noncomputable instance : AddCommMonoid caseIMonomialSyn :=
   ofCaseIMonomialSyn.addCommMonoid
 
 lemma toCaseIMonomialSyn_add (a b : ℕ+ →₀ ℕ) :
     toCaseIMonomialSyn (a + b) = toCaseIMonomialSyn a + toCaseIMonomialSyn b := rfl
 
-lemma ofCaseIMonomialSyn_add (a b : CaseIMonomialSyn) :
+lemma ofCaseIMonomialSyn_add (a b : caseIMonomialSyn) :
     ofCaseIMonomialSyn (a + b) = ofCaseIMonomialSyn a + ofCaseIMonomialSyn b := rfl
 
 /-- The comparison key: weight first, reverse second moment next, then lexicographic order. -/
-def caseIMonomialKey (a : CaseIMonomialSyn) :
+def caseIMonomialKey (a : caseIMonomialSyn) :
     Lex (ℕ × Lex (OrderDual ℕ × Lex (ℕ+ →₀ ℕ))) :=
   toLex (weightedDegree (ofCaseIMonomialSyn a),
     toLex (OrderDual.toDual (secondMoment (ofCaseIMonomialSyn a)),
@@ -1204,10 +1204,10 @@ lemma caseIMonomialKey_injective : Function.Injective caseIMonomialKey := by
   exact congrArg (fun z ↦ ofLex (ofLex (ofLex z).2).2) h
 
 /-- The linear order underlying the Case I monomial order. -/
-noncomputable instance : LinearOrder CaseIMonomialSyn :=
+noncomputable instance : LinearOrder caseIMonomialSyn :=
   LinearOrder.lift' caseIMonomialKey caseIMonomialKey_injective
 
-lemma caseIMonomialSyn_lt_iff {a b : CaseIMonomialSyn} :
+lemma caseIMonomialSyn_lt_iff {a b : caseIMonomialSyn} :
     a < b ↔
       weightedDegree (ofCaseIMonomialSyn a) < weightedDegree (ofCaseIMonomialSyn b) ∨
         weightedDegree (ofCaseIMonomialSyn a) = weightedDegree (ofCaseIMonomialSyn b) ∧
@@ -1217,7 +1217,7 @@ lemma caseIMonomialSyn_lt_iff {a b : CaseIMonomialSyn} :
   change caseIMonomialKey a < caseIMonomialKey b ↔ _
   simp [caseIMonomialKey, Prod.Lex.toLex_lt_toLex]
 
-lemma caseIMonomialSyn_le_iff {a b : CaseIMonomialSyn} :
+lemma caseIMonomialSyn_le_iff {a b : caseIMonomialSyn} :
     a ≤ b ↔
       weightedDegree (ofCaseIMonomialSyn a) < weightedDegree (ofCaseIMonomialSyn b) ∨
         weightedDegree (ofCaseIMonomialSyn a) = weightedDegree (ofCaseIMonomialSyn b) ∧
@@ -1227,7 +1227,7 @@ lemma caseIMonomialSyn_le_iff {a b : CaseIMonomialSyn} :
   change caseIMonomialKey a ≤ caseIMonomialKey b ↔ _
   simp [caseIMonomialKey, Prod.Lex.toLex_le_toLex, Prod.Lex.toLex_lt_toLex]
 
-instance : IsOrderedCancelAddMonoid CaseIMonomialSyn where
+instance : IsOrderedCancelAddMonoid caseIMonomialSyn where
   le_of_add_le_add_left a b c h := by
     rw [caseIMonomialSyn_le_iff] at h ⊢
     simpa only [ofCaseIMonomialSyn_add, weightedDegree_add, secondMoment_add,
@@ -1241,7 +1241,7 @@ instance : IsOrderedCancelAddMonoid CaseIMonomialSyn where
       add_right_cancel_iff, add_left_cancel_iff, add_le_add_iff_left,
       add_le_add_iff_right] using h
 
-instance : WellFoundedLT CaseIMonomialSyn := by
+instance : WellFoundedLT caseIMonomialSyn := by
   constructor
   rw [WellFounded.wellFounded_iff_has_min]
   intro u hu
@@ -1251,7 +1251,7 @@ instance : WellFoundedLT CaseIMonomialSyn := by
     exact ⟨weightedDegree (ofCaseIMonomialSyn a), a, ha, rfl⟩
   let n := Nat.find hex
   have hn : ∃ a ∈ u, weightedDegree (ofCaseIMonomialSyn a) = n := Nat.find_spec hex
-  let fiber : Set CaseIMonomialSyn :=
+  let fiber : Set caseIMonomialSyn :=
     {a | weightedDegree (ofCaseIMonomialSyn a) = n}
   have hfiber : fiber.Finite := by
     change Set.Finite {a : ℕ+ →₀ ℕ | weightedDegree a = n}
@@ -1295,7 +1295,7 @@ lemma eq_of_le_of_weightedDegree_eq {a b : ℕ+ →₀ ℕ} (hab : a ≤ b)
 
 /-- The monomial order of Section 4, certified as a monomial order in Lemma 4.1. -/
 noncomputable def CaseIMonomialOrder : MonomialOrder ℕ+ where
-  syn := CaseIMonomialSyn
+  syn := caseIMonomialSyn
   toSyn := { toEquiv := toCaseIMonomialSyn, map_add' := toCaseIMonomialSyn_add }
   toSyn_monotone a b hab := by
     rw [caseIMonomialSyn_le_iff]
