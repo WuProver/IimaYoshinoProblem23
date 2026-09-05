@@ -4,7 +4,7 @@ import Mathlib.LinearAlgebra.Determinant
 /-!
 # Statements from “A Conditional Solution to Iima–Yoshino Problem 2.3”
 
-This file formalizes Theorem 1.1 and Proposition 6.1 over `ℂ`.
+This file formalizes Theorem 1.2 and Proposition 5.1 over `ℂ`.
 -/
 
 open scoped MonomialOrder
@@ -3739,11 +3739,11 @@ lemma G_isReduced (c : ℂ) (hc : c ^ 2 + c = 1) :
           isCaseIMonomialOrder_caseIMonomialOrder hgap hq
 
 /--
-Theorem 1.1.  Here the leading monomial is represented by its exponent vector
+Theorem 1.2.  Here the leading monomial is represented by its exponent vector
 `m.degree`, and the assertion that the allowed residue classes freely generate the quotient is
 represented by bijectivity of the canonical evaluation map `allowedToQuotient`.
 -/
-theorem theorem_1_1 (c : ℂ) (hc : c ^ 2 + c = 1) :
+theorem theorem_1_2 (c : ℂ) (hc : c ^ 2 + c = 1) :
     ∃ hG : caseIMonomialOrder.IsGroebnerBasis (G c) (I c),
       hG.IsReduced ∧
         Ideal.span (caseIMonomialOrder.leadingTerm '' (I c : Set S)) = J ∧
@@ -4485,10 +4485,10 @@ lemma exists_basis_matching {ι κ V : Type*} [Fintype ι] [Fintype κ]
   simpa [Module.Basis.toMatrix_apply, bκ', e₀] using hi
 
 /--
-Proposition 6.1.  In every weighted degree, the support of the normal-form matrix contains a
+Proposition 5.1.  In every weighted degree, the support of the normal-form matrix contains a
 perfect matching between `P(n)` and `Q(n)`.
 -/
-theorem proposition_6_1 (c : ℂ) (hc : c ^ 2 + c = 1) (m : MonomialOrder ℕ+)
+theorem proposition_5_1 (c : ℂ) (hc : c ^ 2 + c = 1) (m : MonomialOrder ℕ+)
     (hm : IsCaseIMonomialOrder m) (hG : m.IsGroebnerBasis (G c) (I c))
     (hred : hG.IsReduced) (n : ℕ) :
     ∃ π : P n ≃ Q n,
