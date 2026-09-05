@@ -2,9 +2,11 @@ import ToGroebner.StandardRepresentation
 import Mathlib.LinearAlgebra.Determinant
 
 /-!
-# Statements from “A Conditional Solution to Iima–Yoshino Problem 2.3”
+# Statements from “A Solution to Iima–Yoshino Problem 2.3 and Its Formalization in Lean 4”
 
-This file formalizes Theorem 1.2 and Proposition 5.1 over `ℂ`.
+This file formalizes the complex specialization of Theorem 1.2 and the matching assertion
+of Proposition 5.1, equation (26). The grading results are proved separately below.
+Numbering follows the accompanying paper; see `PAPER_ALIGNMENT.md` for the correspondence.
 -/
 
 open scoped MonomialOrder
@@ -27,7 +29,7 @@ lemma x_eq_X (i : ℕ+) : x (i : ℕ) = X i := by
     exact Subtype.ext rfl
   · exact (h i.prop).elim
 
-/-- The five-periodic coefficient sequence `s` from equation (3). -/
+/-- The five-periodic coefficient sequence `s` from equation (4). -/
 def s (c : ℂ) (n : ℕ) : ℂ :=
   match n % 5 with
   | 0 => 2
@@ -36,7 +38,7 @@ def s (c : ℂ) (n : ℕ) : ℂ :=
   | 3 => -1 - c
   | _ => c
 
-/-- The five-periodic auxiliary coefficient sequence `η` from equation (3). -/
+/-- The five-periodic auxiliary coefficient sequence `η` from equation (4). -/
 def eta (c : ℂ) (n : ℕ) : ℂ :=
   match n % 5 with
   | 0 => 0
@@ -246,7 +248,7 @@ lemma zeta_delta_mul_eta (c : ℂ) (hc : c ^ 2 + c = 1) (n : ℕ) :
     linear_combination -hdiff
   · simp [eta, h, Nat.mul_mod]
 
-/-- The relation `gₙ` from equation (4). -/
+/-- The relation `gₙ` from equation (5), used in the paper for `n ≥ 2`. -/
 noncomputable def g (c : ℂ) (n : ℕ) : S :=
   C (s c n - c) * x n +
     ∑ i ∈ (Finset.range n).filter (fun i ↦ 0 < i ∧ 2 * i < n),
@@ -265,7 +267,8 @@ lemma coeff_generatingSeries (n : ℕ) :
     PowerSeries.coeff n generatingSeries = if n = 0 then 1 else x n := by
   simp [generatingSeries, generatingCoefficient]
 
-/-- The series whose coefficient of `tⁿ`, for `n ≥ 2`, is `gₙ`. -/
+/-- The series `R(t)` from equation (11); under `c² + c = 1`, its coefficient of
+`tⁿ` for `n ≥ 2` is `gₙ`, as in equation (12). -/
 noncomputable def relationSeries (c : ℂ) : PowerSeries S :=
   PowerSeries.rescale (C (zeta c)⁻¹) generatingSeries *
       PowerSeries.rescale (C (zeta c)) generatingSeries -
@@ -522,6 +525,7 @@ lemma rotatedErrorSeries_eq (c a : ℂ) :
   simp only [rotatedErrorSeries, normalizedErrorSeries, map_sub, map_mul, map_one,
     rotatedGeneratingSeries, normalizedGeneratingSeries, PowerSeries.rescale_rescale]
 
+/-- Equation (16), the generating-series pentagon identity used in Proposition 2.1. -/
 lemma pentagon_syzygy_series (c : ℂ) (hc : c ^ 2 + c = 1) :
     rotatedGeneratingSeries c (zeta c ^ 2) * rotatedErrorSeries c (zeta c ^ 4) -
           rotatedGeneratingSeries c (zeta c ^ 3) * rotatedErrorSeries c (zeta c) -
@@ -825,14 +829,15 @@ lemma pentagonMainCoefficient_ne_zero (c : ℂ) (hc : c ^ 2 + c = 1) {n : ℕ}
         (pow_ne_zero 3 (inv_ne_zero (ne_zero_of_quadratic c hc))))
       (two_sub_ne_zero c hc)
 
-/-- The non-resonant indices `D` from equation (5). -/
+/-- The non-resonant indices `D` from equation (6). -/
 def D : Set ℕ :=
   {n | 2 ≤ n ∧ (n % 5 = 0 ∨ n % 5 = 2 ∨ n % 5 = 3)}
 
-/-- The ideal `I = (gₙ : n ∈ D)` from equation (5). -/
+/-- The ideal `I = (gₙ : n ∈ D)` from equation (6). -/
 noncomputable def I (c : ℂ) : Ideal S :=
   Ideal.span (g c '' D)
 
+/-- The nontrivial inclusion in Proposition 2.2: every `gₙ`, `n ≥ 2`, belongs to `I`. -/
 lemma all_g_mem_I (c : ℂ) (hc : c ^ 2 + c = 1) (n : ℕ) (hn : 2 ≤ n) :
     g c n ∈ I c := by
   induction n using Nat.strong_induction_on with
@@ -911,7 +916,7 @@ lemma next_ne_self (i : ℕ+) : next i ≠ i := by
   change (i : ℕ) < (i : ℕ) + 1
   exact Nat.lt_succ_self _
 
-/-- The monic family `G` displayed in Theorem 1.1. -/
+/-- The family `G` in Theorem 1.2, equation (8); it is monic when `c² + c = 1`. -/
 noncomputable def G (c : ℂ) : Set S :=
   Set.range (fun m : ℕ+ ↦ g c (2 * (m : ℕ))) ∪
     Set.range (fun m : ℕ+ ↦ C c⁻¹ * g c (2 * (m : ℕ) + 1))
@@ -1081,11 +1086,11 @@ lemma span_G_eq_I (c : ℂ) (hc : c ^ 2 + c = 1) : Ideal.span (G c) = I c := by
       change g c (2 * k + 1) ∈ Ideal.span (G c)
       exact hmul
 
-/-- Weighted degree `wt(α) = ∑ i αᵢ`. -/
+/-- Weighted degree `wt(α) = ∑ i αᵢ` from equation (19). -/
 def weightedDegree (a : ℕ+ →₀ ℕ) : ℕ :=
   a.sum fun i e ↦ (i : ℕ) * e
 
-/-- Second moment `σ(α) = ∑ i² αᵢ`. -/
+/-- Second moment `sm(α) = ∑ i² αᵢ` from equation (19). -/
 def secondMoment (a : ℕ+ →₀ ℕ) : ℕ :=
   a.sum fun i e ↦ (i : ℕ) ^ 2 * e
 
@@ -1288,7 +1293,7 @@ lemma eq_of_le_of_weightedDegree_eq {a b : ℕ+ →₀ ℕ} (hab : a ≤ b)
   rw [weightedDegree_eq_zero_iff] at hzero
   simpa [hzero] using hdecomp
 
-/-- The concrete monomial order used in the Case I argument. -/
+/-- The monomial order of Section 4, certified as a monomial order in Lemma 4.1. -/
 noncomputable def CaseIMonomialOrder : MonomialOrder ℕ+ where
   syn := CaseIMonomialSyn
   toSyn := { toEquiv := toCaseIMonomialSyn, map_add' := toCaseIMonomialSyn_add }
@@ -1431,6 +1436,7 @@ lemma degree_finset_sum_lt (m : MonomialOrder ℕ+) {T : Type*} (u : Finset T)
       intro i hi
       exact h i (by simp [hi])
 
+/-- The even leading-monomial formula in Lemma 4.2. -/
 lemma degree_g_even (c : ℂ) (i : ℕ+) :
     CaseIMonomialOrder.degree (g c (2 * (i : ℕ))) = Finsupp.single i 2 := by
   classical
@@ -1647,6 +1653,7 @@ lemma degree_odd_main_term (c : ℂ) (hc : c ^ 2 + c = 1)
   rw [m.degree_mul hCX (by simp), m.degree_mul (by simp [hc0]) (by simp),
     m.degree_C, m.degree_X, m.degree_X, zero_add]
 
+/-- The odd leading-monomial formula in Lemma 4.2. -/
 lemma degree_g_odd (c : ℂ) (hc : c ^ 2 + c = 1) (i : ℕ+) :
     CaseIMonomialOrder.degree (g c (2 * (i : ℕ) + 1)) =
       Finsupp.single i 1 + Finsupp.single (next i) 1 := by
@@ -3137,6 +3144,7 @@ lemma initialIdeal_eq_J_of_isGroebnerBasis (c : ℂ) (hc : c ^ 2 + c = 1)
   rw [hG.span_leadingTerm_image]
   exact span_leadingTerm_G_eq_J c hc
 
+/-- The Gröbner-basis assertion of Proposition 4.3; see also `G_isReduced`. -/
 lemma G_isGroebnerBasis (c : ℂ) (hc : c ^ 2 + c = 1) :
     CaseIMonomialOrder.IsGroebnerBasis (G c) (I c) := by
   have h := MonomialOrder.IsGroebnerBasis.isGroebnerBasis_of_hasStandardRepresentation_sPolynomial
@@ -3271,7 +3279,7 @@ lemma eliminationHom_g_of_mem_D (c : ℂ) (hc : c ^ 2 + c = 1)
     ← mul_assoc, ← map_mul, hscalar, map_neg, map_one]
   split_ifs <;> ring
 
-/-- The map sending each allowed variable to its residue class modulo `I`. -/
+/-- The canonical map `θ` from equation (7), sending each allowed variable to its class modulo `I`. -/
 noncomputable def allowedToQuotient (c : ℂ) :
     MvPolynomial AllowedIndex ℂ →ₐ[ℂ] S ⧸ I c :=
   MvPolynomial.aeval fun i ↦ Ideal.Quotient.mk (I c) (X i.1)
@@ -3405,6 +3413,7 @@ lemma allowedToQuotient_comp_quotientToAllowed (c : ℂ) (hc : c ^ 2 + c = 1) :
       allowedToQuotient_eliminatedVariable c hc (n := i.val) i.prop
     _ = Ideal.Quotient.mk (I c) (X i) := by rw [x_eq_X]
 
+/-- The algebra-isomorphism assertion of Proposition 3.1; grading is treated separately below. -/
 lemma allowedToQuotient_bijective (c : ℂ) (hc : c ^ 2 + c = 1) :
     Function.Bijective (allowedToQuotient c) := by
   have hl : Function.LeftInverse (quotientToAllowed c hc) (allowedToQuotient c) := by
@@ -3639,6 +3648,7 @@ lemma generator_eq_of_degree_le_adjacent (c : ℂ) (hc : c ^ 2 + c = 1) (i : ℕ
       simp [Finsupp.single_apply, hji, next_ne_self, hnextnext_ne_i,
         hnextnext_ne_next] at hnext
 
+/-- The reducedness assertion of Proposition 4.3. -/
 lemma G_isReduced (c : ℂ) (hc : c ^ 2 + c = 1) :
     (G_isGroebnerBasis c hc).IsReduced := by
   rw [MonomialOrder.IsGroebnerBasis.IsReduced.isReduced_def]
@@ -3656,9 +3666,11 @@ lemma G_isReduced (c : ℂ) (hc : c ^ 2 + c = 1) :
       · exact generator_degree_not_le_gap c hc hgap hq
 
 /--
-Theorem 1.2.  Here the leading monomial is represented by its exponent vector
-`m.degree`, and the assertion that the allowed residue classes freely generate the quotient is
-represented by bijectivity of the canonical evaluation map `allowedToQuotient`.
+Theorem 1.2 over `ℂ`, together with the leading-monomial formulas of Lemma 4.2.
+The leading monomial is represented by its exponent vector `CaseIMonomialOrder.degree`.
+The quotient assertion is represented by bijectivity of `allowedToQuotient`; grading preservation
+is established separately by `weightedHomogeneousComponent_allowedRename` and
+`quotientToAllowed_mk_isWeightedHomogeneous`.
 -/
 theorem theorem_1_2 (c : ℂ) (hc : c ^ 2 + c = 1) :
     ∃ hG : CaseIMonomialOrder.IsGroebnerBasis (G c) (I c),
@@ -4398,8 +4410,9 @@ lemma exists_basis_matching {ι κ V : Type*} [Fintype ι] [Fintype κ]
   simpa [Module.Basis.toMatrix_apply, bκ', e₀] using hi
 
 /--
-Proposition 5.1.  In every weighted degree, the support of the normal-form matrix contains a
-perfect matching between `P(n)` and `Q(n)`.
+The matching assertion of Proposition 5.1, equation (26), over `ℂ`.
+In every weighted degree, the support of the normal-form matrix contains a perfect matching
+between `P(n)` and `Q(n)`. The linear isomorphism underlying the matrix is `degreeNormalFormEquiv`.
 -/
 theorem proposition_5_1 (c : ℂ) (hc : c ^ 2 + c = 1)
     (hG : CaseIMonomialOrder.IsGroebnerBasis (G c) (I c)) (hred : hG.IsReduced) (n : ℕ) :

@@ -61,20 +61,20 @@ theorem isGroebnerBasis_of_hasStandardRepresentation_sPolynomial
   block of code below it and above the next comment block (if it exists). And inline comments (`--`)
   are about technical details in formalization. -/
   -- TODO: (maybe) simplify this proof with `withBotDegree`? (The current proof was made before
-  -- `withBotDegree` was defined and used to refactore `IsRemainder`, so it deals with some edge
+  -- `withBotDegree` was defined and used to refactor `IsRemainder`, so it deals with some edge
   -- cases about degree of zero polynomial.)
   classical
   /- 
   We only need to prove for all $p ∈ ⟨G⟩$ (`p ∈ Ideal.span G`),
-  (with loss of generality, assuming $p ≠ 0$)
+  (without loss of generality, assuming $p ≠ 0$)
   $0$ is a remainder of $p$ on division by $G$ (`m.IsRemainder p G 0`), i.e.
-  to prove that these exists finite subset $G'$ of $G$ and $f$
+  to prove that there exists a finite subset $G'$ of $G$ and $f$
   s.t. $p = ∑_{g ∈ G'} f(g) * g$ and $∀ g ∈ G', degree(f(g) * g) ≤ degree(p)$. -/
   wlog! _ : Nontrivial R
   · simp
   have hG₁ {g : G} := hG g g.prop
   have hG₀ {g} := (@hG₁ g).mem_nonZeroDivisors
-  -- `rfl` doens't rewrite the goal?
+  -- `rfl` doesn't rewrite the goal?
   rw [isGroebnerBasis_iff_subset_ideal_and_isRemainder_zero (hG := hG)]
   exists Ideal.subset_span
   intro p hp
@@ -89,7 +89,7 @@ theorem isGroebnerBasis_of_hasStandardRepresentation_sPolynomial
   We assume it doesn't hold, i.e. $max_{g ∈ G'} degree(f(g) * g) > degree(p)$. -/
     -- todo: `Ideal.mem_span_iff_exists_finset_subset`?
   obtain ⟨f₀_, G'₀_, hG'_, ⟨-, hsumf⟩⟩ := Submodule.mem_span_iff_exists_finset_subset.mp hp
-  -- we need variants of `f₀` abd `G'₀` that use coercion `↥G` instead of `MvPolynomial σ R`, to
+  -- we need variants of `f₀` and `G'₀` that use coercion `↥G` instead of `MvPolynomial σ R`, to
   -- pass the information of set membership and make use of `hG` and S-polynomial decomposition.
   let G'₀ := G'₀_.attach.image (β := G) (fun p ↦ ⟨p.val, hG'_ p.prop⟩)
   let f₀ (p : G) := f₀_ p
@@ -104,7 +104,7 @@ theorem isGroebnerBasis_of_hasStandardRepresentation_sPolynomial
   /- We have now $P(max_{g ∈ G'} degree(f(g) * g))$ where
   $P(a) : ∃ finite G' ⊆ G and f, p = ∑ g ∈ G', f(g) * g ∧ ∀ g ∈ G', degree(f(g) * g) ≤ a$,
   and we will prove an assertion that, for each $a > degree(p)$, if $P(a)$, then there exists
-  $degree(g) ≤ a' < a$ s.t. $P(a')$ also holds. With this assertion, we can get $P(degree(p))$ by
+  $degree(p) ≤ a' < a$ s.t. $P(a')$ also holds. With this assertion, we can get $P(degree(p))$ by
   well-founded induction on $a$.
   (Formalization note: here we don't directly prove $degree(p)$ satisfies predicate $P$ by
    induction. We prove with predicate $a ↦ degree(p) ≤ a ∧ P(a)$ instead.) -/
@@ -117,7 +117,7 @@ theorem isGroebnerBasis_of_hasStandardRepresentation_sPolynomial
         ∀ g ∈ G', (m.toSyn <| m.degree <| g.val * f g) ≤ a)
     (fun a ha ⟨ha', ⟨f, G', hsumf, h_deg_le⟩⟩ ↦ ?_)
     ⟨le_of_lt h, ⟨f₀, G'₀, hsumf.symm, by apply Finset.le_sup⟩⟩ |>.2
-  /- We start to prove the assertion. Assume $a > degree(p)$ (`ha`), $G' ⊆ G$ (`hG'subsetG`),
+  /- We start to prove the assertion. Assume $a > degree(p)$ (`ha`), $G' : Finset G$,
   $f$ (`f`) s.t. $p = ∑ g ∈ G', f(g) * g$ (`hsumf`), and
   $∀ g ∈ G', degree(f(g) * g) ≤ a$ (`h_deg_le`).
   Without loss of generality, we can assume $f(g)$ vanishes when $g ∉ G'$.  -/
@@ -125,7 +125,7 @@ theorem isGroebnerBasis_of_hasStandardRepresentation_sPolynomial
   wlog hf₀support : ∀ g, g ∉ G' → f g = 0 generalizing f
   · specialize this (fun g ↦ if g ∈ G' then f g else 0); simp_all
   apply lt_of_le_of_ne' ha' at ha
-  /- Let $lt'(g) := leadingTerm(g) if degree(f(g) * g) = a, or else 0$ (`lt'`).
+  /- Let $lt'(g) := leadingTerm(f(g)) if degree(f(g) * g) = a, or else 0$ (`lt'`).
   $$ p = ∑ g ∈ G', f(g) * g
        = ∑ g ∈ G' with (degree(f(g) * g) = a), leadingTerm(f(g)) * g +
         ∑ g ∈ G', (f(g) - lt'(g)) * g.$$ (`hp`) -/
@@ -136,8 +136,9 @@ theorem isGroebnerBasis_of_hasStandardRepresentation_sPolynomial
     _ = ∑ g ∈ G' with degFgEqA g, m.leadingTerm (f g) * g +
         ∑ g ∈ G', (f g - lt' g) * g := by
       simp [← Finset.sum_add_distrib, ← add_mul, ← ite_zero_mul, Finset.sum_filter, -ite_mul, lt']
-  /- For any $g ∈ G'$, it can be easily seen that $degree (f(g) - lt'(g)) g$ is either less than $a$
-  or equal to $0$, so $degree( (f(g) - lt'(g)) * g ) < a$, and $∑ g ∈ G', (f(g) - lt'(g)) * g < a$.
+  /- For any $g ∈ G'$, removing the leading term when $degree(f(g) * g) = a$ gives
+  $degree((f(g) - lt'(g)) * g) < a$. Zero products also satisfy this bound since $0 < a$.
+  Thus $degree(∑ g ∈ G', (f(g) - lt'(g)) * g) < a$.
   Since $$degree( ∑ g ∈ G' with (degree(f(g) * g) = a), leadingTerm(f(g)) * g +
       ∑ g ∈ G', (f(g) - lt'(g)) * g )
     = degree(p) < a,$$
@@ -196,13 +197,13 @@ theorem isGroebnerBasis_of_hasStandardRepresentation_sPolynomial
     rhs
     simp only [m.sPolynomial_monomial_mul_of_mem_nonZeroDivisors hG₀ hG₀,
       ← G'.filter degFgEqA |>.sum_coe_sort]
-  /- For echo $g₁, g₂ ∈ G$, $0$ is a remainder of $sPoly(g₁, g₂)$ on division
-  by G, and thus we obtain its "quotients" in form of a finitely supported function $q_{g₁, g₂}$
-  s.t. it satisfies the following conditions (`hq`):
-    - $supp(q_{g₁, g₂}) ⊆ G$,
-    - $sPoly(g₁, g₂) = ∑ g ∈ G, q_{g₁, g₂}(g) * g$,
-    - $∀ g ∈ G, degree(q_{g₁, g₂}(g) * g) ≤ degree(sPoly(g₁, g₂))$, and
-    - if $sPoly(g₁, g₂) = 0$ then $q_{g₁, g₂} = 0$. -/
+  /- For each pair $g₁, g₂$ in the filtered set, the standard-representation hypothesis
+  supplies a finitely supported function $q_{g₁, g₂} : G →₀ S$ (`q`) such that (`hq`):
+    - $sPoly(g₁, g₂) = ∑ g ∈ G, q_{g₁, g₂}(g) * g$;
+    - if $q_{g₁, g₂}(g) ≠ 0$, then
+      $degree(g * q_{g₁, g₂}(g)) < degree(g₁) ⊔ degree(g₂)$.
+  The bound is the least common multiple of the leading monomials. No zero-remainder
+  hypothesis or requirement that $q_{g₁, g₂} = 0$ for a zero S-polynomial is used here. -/
   replace hsPoly (g₁ g₂ : G'.filter degFgEqA) := hsPoly g₁ g₂
   let q (g₁ g₂ : G'.filter degFgEqA) := (hsPoly g₁ g₂).choose
   have hq (g₁ g₂ : G'.filter degFgEqA) := (hsPoly g₁ g₂).choose_spec
@@ -248,7 +249,7 @@ theorem isGroebnerBasis_of_hasStandardRepresentation_sPolynomial
   simp_rw [mul_one, G''.mul_sum, ← mul_assoc, Finset.smul_sum,
     ← smul_mul_assoc, smul_monomial, Finset.sum_comm (t:=G''), ← Finset.sum_mul,
     smul_eq_mul (α := R)] at h_sum_sPoly
-  /- With the assumption that $f(g)$ vanishes when $g ∉ G'$ and $G'' ⊆ G'$, we have
+  /- With the assumption that $f(g)$ vanishes when $g ∉ G'$ and $G' ⊆ G''$, we have
   $$p = ∑ g ∈ G' with (degree(f(g) * g) = a), leadingTerm(f(g)) * g + ∑ g ∈ G', (f(g) - lt'(g)) * g
     = ∑ g ∈ G' with (degree(f(g) * g) = a), leadingTerm(f(g)) * g + ∑ g ∈ G'', (f(g) - lt'(g)) * g
     = ∑ g ∈ G'',
@@ -279,7 +280,7 @@ theorem isGroebnerBasis_of_hasStandardRepresentation_sPolynomial
   $$∑ g₁, g₂ ∈ \{g ∈ G' | degree(f(g) * g) = a\},
       c(g₁, g₂)•(lcm(lm(f(g₁) * g₁), lm(f(g₂) * g₂)) / lcm(lm(g₁), lm(g₂))) * q_{g₁, g₂}(g)
     + (f(g) - lt'(g)),$$
-  and $a'$ be $max(degree(p), max_{g ∈ G''} f'(g) * g)$. Then we have $p = ∑ g ∈ G'', f'(g) * g$,
+  and $a'$ be $max(degree(p), max_{g ∈ G''} degree(f'(g) * g))$. Then we have $p = ∑ g ∈ G'', f'(g) * g$,
   and apparently $degree(p) ≤ a'$ and $∀ g ∈ G'', degree(f'(g) * g) ≤ a'$. Now both
   $degree(p) ≤ a'$ and $P(a')$ are got.
   To prove the theorem, it remains to prove that $a' < a$. -/
@@ -311,8 +312,8 @@ theorem isGroebnerBasis_of_hasStandardRepresentation_sPolynomial
     refine lt_of_le_of_lt m.degree_sum_le <| (Finset.sup_lt_iff h_a_gt_zero).mpr ?_
     simp only [Finset.mem_univ, forall_const]
     intro g₂
-    /- Without loss of generality, we assume $sPoly(g₁, g₂) ≠ 0$.
-    (If it is $0$, then $q_{g₁, g₂} = 0$).
+    /- We may assume $q_{g₁, g₂}(g) ≠ 0$; otherwise this summand is zero.
+    The standard-representation hypothesis then bounds the degree of its product with $g$.
     $$degree(
       c(g₁, g₂) • (lcm(lm(f(g₁) * g₁), lm(f(g₂) * g₂)) / lcm(lm(g₁), lm(g₂))) * q_{g₁, g₂}(g) * g)
     ≤ degree(lcm(lm(f(g₁) * g₁), lm(f(g₂) * g₂))) - degree(lcm(lm(g₁), lm(g₂))) +
@@ -324,8 +325,8 @@ theorem isGroebnerBasis_of_hasStandardRepresentation_sPolynomial
     apply lt_of_le_of_lt degree_mul_le
     rw [AddEquiv.map_add]
     refine add_lt_of_add_lt_right ?_ (degree_monomial_le _)
-    /- $$... ≤ degree(lcm(lm(f(g₁) * g₁), lm(f(g₂) * g₂))) - degree(lcm(lm(g₁), lm(g₂))) +
-                degree(sPoly(g₁, g₂))$$ -/
+    /- $$... < degree(lcm(lm(f(g₁) * g₁), lm(f(g₂) * g₂))) - degree(lcm(lm(g₁), lm(g₂))) +
+                degree(lcm(lm(g₁), lm(g₂)))$$ -/
     apply lt_of_lt_of_le (add_lt_add_right
       (mul_comm g.val (q _ _ g) ▸ h_deg_gq_lt_sup) _)
     /- $$... = degree(lcm(lm(f(g₁) * g₁), lm(f(g₂) * g₂)))$$ -/
@@ -339,7 +340,7 @@ theorem isGroebnerBasis_of_hasStandardRepresentation_sPolynomial
     all_goals
       by_contra! hfg0
       simp [hfg0, h_a_gt_zero.ne] at hfgg₁ hfgg₂
-  · /- It is easy to prove $degree(f(g) - lt'(g)) < a$. -/
+  · /- It remains to prove $degree((f(g) - lt'(g)) * g) < a$. -/
     wlog h : degFgEqA g
     · by_cases hg'G' : g ∈ G'
       · simp [h, lt', lt_of_le_of_ne (mul_comm (f g) g ▸ h_deg_le g hg'G') h]
